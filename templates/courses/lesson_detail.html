@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}{{ lesson.title }} — mayor4code{% endblock %}
+{% block content %}
+<div class="layout">
+  <aside class="card sidebar">
+    <p class="badge">Lesson {{ lesson.order }}</p>
+    <h3>{{ lesson.title }}</h3>
+    <p class="muted text-sm" style="margin:0 0 14px;">{{ lesson.summary|default:"" }}</p>
+
+    {% if progress %}
+      <p class="text-sm" style="margin:0 0 4px;">Score: <strong>{{ progress.score }}%</strong></p>
+      <p class="text-xs muted" style="margin:0 0 4px;">Attempts: {{ progress.attempts }}</p>
+      <p class="text-sm" style="margin:0 0 14px;color:{% if progress.is_completed %}var(--success){% else %}var(--danger){% endif %};">
+        {% if progress.is_completed %}&check; Passed{% else %}&cross; Not passed yet{% endif %}
+      </p>
+    {% endif %}
+
+    <div class="sidebar-nav">
+      {% if prev_lesson %}
+        <a class="btn btn-secondary btn-sm" href="{% url 'lesson_detail' prev_lesson.slug %}">&larr; Prev</a>
+      {% endif %}
+      {% if next_lesson and progress.is_completed %}
+        <a class="btn btn-primary btn-sm" href="{% url 'lesson_detail' next_lesson.slug %}">Next &rarr;</a>
+      {% endif %}
+    </div>
+
+    <div style="margin-top:14px;">
+      <a class="btn btn-ghost btn-sm" href="{% url 'lesson_list' %}">&larr; All Lessons</a>
+    </div>
+  </aside>
+
+  <section class="card content-card">
+    <p class="badge">Lesson Content</p>
+    <h1>{{ lesson.title }}</h1>
+    <div class="lesson-content">{{ lesson.content|safe }}</div>
+
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
+      <p class="badge">Try It Yourself</p>
+      <p class="muted text-sm" style="margin:0 0 12px;">Write and run Python code directly in your browser.</p>
+      {% include 'includes/code_runner.html' %}
+    </div>
+
+    {% if lesson.quiz %}
+      <div class="actions" style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
+        {% if progress and not progress.is_completed %}
+          <a class="btn btn-primary" href="{% url 'take_quiz' lesson.slug %}">&#9997; Retry Quiz</a>
+        {% elif progress %}
+          <a class="btn btn-secondary" href="{% url 'take_quiz' lesson.slug %}">&#9997; Retake Quiz</a>
+        {% else %}
+          <a class="btn btn-primary" href="{% url 'take_quiz' lesson.slug %}">&#9997; Take the Quiz</a>
+        {% endif %}
+        {% if progress %}
+          <span class="text-sm muted" style="align-self:center;">
+            Last score: {{ progress.score }}% ({{ progress.attempts }} attempt{{ progress.attempts|pluralize }})
+          </span>
+        {% endif %}
+      </div>
+    {% else %}
+      <p class="muted" style="margin-top:20px;">No quiz added for this lesson yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

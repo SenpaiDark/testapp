@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Page Not Found — mayor4code{% endblock %}
+{% block content %}
+<div class="error-page">
+  <div class="card" style="padding:48px 32px;max-width:500px;margin:0 auto;">
+    <p class="error-code">404</p>
+    <h1>Page Not Found</h1>
+    <p class="muted">The page you're looking for doesn't exist or has been moved.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="{% url 'home' %}">Go Home</a>
+      <a class="btn btn-secondary" href="{% url 'dashboard' %}">Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

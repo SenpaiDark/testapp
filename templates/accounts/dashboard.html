@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — mayor4code{% endblock %}
+{% block content %}
+<section class="section-head">
+  <p class="badge">Dashboard</p>
+  <h1>Welcome back, {{ request.user.username }}</h1>
+  <p class="muted">Track your Python learning progress below.</p>
+</section>
+
+<div class="dashboard-stats">
+  <div class="card stat-card">
+    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>
+    <span class="stat-card-value">{{ progress_pct }}%</span>
+    <span class="stat-card-label">Overall Progress</span>
+  </div>
+  <div class="card stat-card">
+    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="9 11 12 14 22 4"/>
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </svg>
+    <span class="stat-card-value">{{ completed_count }} / {{ total_count }}</span>
+    <span class="stat-card-label">Lessons Completed</span>
+  </div>
+  <div class="card stat-card">
+    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="11" width="18" height="11" rx="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    <span class="stat-card-value">{{ completed_count }}</span>
+    <span class="stat-card-label">Unlocked Lessons</span>
+  </div>
+</div>
+
+<div class="progress-banner">
+  <span class="progress-label">Progress</span>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" style="width:{{ progress_pct }}%"></div>
+  </div>
+  <span class="progress-count">{{ completed_count }} / {{ total_count }} completed</span>
+</div>
+
+<div class="grid grid-2">
+  {% for row in lesson_rows %}
+  <div class="card lesson-card">
+    <div class="card-top">
+      <h3>{{ row.lesson.order }}. {{ row.lesson.title }}</h3>
+      {% if row.progress.is_completed %}
+        <span class="status status-done">Completed</span>
+      {% elif row.unlocked %}
+        <span class="status status-unlocked">Unlocked</span>
+      {% else %}
+        <span class="status status-locked">Locked</span>
+      {% endif %}
+    </div>
+
+    <p class="muted text-sm">{{ row.lesson.summary|default:"No summary added yet." }}</p>
+
+    {% if row.progress %}
+      <p class="score-line">Score: <strong>{{ row.progress.score }}%</strong> &mdash; {% if row.progress.is_completed %}Passed{% else %}Not passed yet{% endif %}</p>
+    {% else %}
+      <p class="score-line">Not attempted yet</p>
+    {% endif %}
+
+    {% if row.unlocked %}
+      <a class="btn btn-primary" href="{% url 'lesson_detail' row.lesson.slug %}">
+        {% if row.progress.is_completed %}Review Lesson{% else %}Open Lesson{% endif %}
+      </a>
+    {% else %}
+      <button class="btn btn-disabled" disabled>Complete previous lesson first</button>
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="card lesson-card">
+    <div class="empty-state">
+      <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      <h3>No lessons yet</h3>
+      <p>Lessons will appear here once they are added.</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

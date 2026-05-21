@@ -1,0 +1,179 @@
+/* ── Design System ────────────────────────────────────────────
+   Tokens, variables, and base resets.
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 2.8rem;
+
+  /* Font families */
+  --font-sans: Inter, 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  --font-mono: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+
+  /* Font weights */
+  --medium: 500;
+  --semibold: 600;
+  --bold: 700;
+  --extrabold: 800;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  --radius-full: 9999px;
+
+  /* Colors — light */
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #eef2ff;
+  --surface-3: #e2e8f0;
+  --text: #0f172a;
+  --text-2: #1e293b;
+  --muted: #475569;
+  --muted-2: #94a3b8;
+  --border: #e2e8f0;
+  --primary: #2563eb;
+  --primary-2: #1d4ed8;
+  --primary-light: rgba(37, 99, 235, 0.08);
+  --success: #10b981;
+  --success-light: rgba(16, 185, 129, 0.1);
+  --warning: #f59e0b;
+  --warning-light: rgba(245, 158, 11, 0.1);
+  --danger: #ef4444;
+  --danger-light: rgba(239, 68, 68, 0.08);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.12);
+  --code-bg: #f1f5f9;
+  --code-text: #1e293b;
+  --overlay: rgba(15, 23, 42, 0.4);
+
+  /* Transition defaults */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.2s;
+  --duration-slow: 0.3s;
+}
+
+html.dark {
+  --bg: #0b1220;
+  --surface: #111827;
+  --surface-2: #172033;
+  --surface-3: #1f2937;
+  --text: #f8fafc;
+  --text-2: #e2e8f0;
+  --muted: #94a3b8;
+  --muted-2: #64748b;
+  --border: #1f2937;
+  --primary: #3b82f6;
+  --primary-2: #60a5fa;
+  --primary-light: rgba(59, 130, 246, 0.1);
+  --success: #10b981;
+  --success-light: rgba(16, 185, 129, 0.1);
+  --warning: #fbbf24;
+  --warning-light: rgba(251, 191, 36, 0.1);
+  --danger: #f87171;
+  --danger-light: rgba(248, 113, 113, 0.08);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --code-bg: #1e293b;
+  --code-text: #e2e8f0;
+  --overlay: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark mode transition */
+html.theme-transitioning * {
+  transition: background-color 0.3s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* Respect system preference */
+@media (prefers-color-scheme: dark) {
+  html:not(.dark):not(.light) {
+    --bg: #0b1220;
+    --surface: #111827;
+    --surface-2: #172033;
+    --surface-3: #1f2937;
+    --text: #f8fafc;
+    --text-2: #e2e8f0;
+    --muted: #94a3b8;
+    --muted-2: #64748b;
+    --border: #1f2937;
+    --primary: #3b82f6;
+    --primary-2: #60a5fa;
+    --primary-light: rgba(59, 130, 246, 0.1);
+    --success: #10b981;
+    --success-light: rgba(16, 185, 129, 0.1);
+    --warning: #fbbf24;
+    --warning-light: rgba(251, 191, 36, 0.1);
+    --danger: #f87171;
+    --danger-light: rgba(248, 113, 113, 0.08);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+    --overlay: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Base resets */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+ul, ol { list-style: none; margin: 0; padding: 0; }
+
+/* Focus visible ring */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--primary);
+  color: white;
+}

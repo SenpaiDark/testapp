@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Congratulations! — mayor4code{% endblock %}
+{% block content %}
+<div class="hero" style="text-align:center;padding:48px 0;">
+  <div class="card" style="padding:48px 32px;max-width:600px;margin:0 auto;">
+    <p style="font-size:4rem;margin:0 0 12px;">🎉</p>
+    <h1>Congratulations!</h1>
+    <p class="muted" style="font-size:1.1rem;margin:16px 0 24px;">
+      You've completed all {{ total_lessons }} lessons on mayor4code!
+    </p>
+
+    <div class="progress-banner" style="margin-bottom:24px;">
+      <span class="progress-label">Final Score</span>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" style="width:100%;"></div>
+      </div>
+      <span class="progress-count">100% Complete</span>
+    </div>
+
+    {% if avg_score %}
+      <p style="margin:0 0 8px;color:var(--muted);">Average Quiz Score: <strong style="color:var(--text);">{{ avg_score }}%</strong></p>
+      <p style="margin:0 0 8px;color:var(--muted);">Total Attempts: <strong style="color:var(--text);">{{ total_attempts }}</strong></p>
+    {% endif %}
+
+    <div class="actions" style="justify-content:center;margin-top:28px;">
+      <a class="btn btn-primary" href="{% url 'dashboard' %}">Review Lessons</a>
+      <a class="btn btn-secondary" href="{% url 'leaderboard' %}">View Leaderboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

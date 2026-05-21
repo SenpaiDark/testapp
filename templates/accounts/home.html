@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}mayor4code — Learn Python Step by Step{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="card">
+    <p class="badge">Computer Aided Tutor</p>
+    <h1>Learn Python step by step<br>with <span class="brand">mayor<span>4</span>code</span></h1>
+    <p class="muted" style="max-width:520px;">
+      A structured learning platform where each lesson unlocks only after you pass the previous quiz.
+      Five beginner-friendly lessons, instant feedback, dark mode included.
+    </p>
+    <div class="actions">
+      <a class="btn btn-primary" href="{% url 'register' %}">Get Started Free</a>
+      <a class="btn btn-secondary" href="{% url 'login' %}">Login</a>
+    </div>
+  </div>
+</section>
+
+<div class="grid grid-2" style="margin-top:32px;">
+  <div class="card stat-card">
+    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    <span class="stat-card-value">Locked</span>
+    <span class="stat-card-label">Progression — each quiz unlocks the next topic</span>
+  </div>
+  <div class="card stat-card">
+    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </svg>
+    <span class="stat-card-value">Instant</span>
+    <span class="stat-card-label">Quiz scoring — retake as many times as needed</span>
+  </div>
+  <div class="card stat-card">
+    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    </svg>
+    <span class="stat-card-value">5 Lessons</span>
+    <span class="stat-card-label">From Hello World to Functions</span>
+  </div>
+  <div class="card stat-card">
+    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>
+    <span class="stat-card-value">Tracked</span>
+    <span class="stat-card-label">Progress dashboard shows exactly where you are</span>
+  </div>
+</div>
+{% endblock %}

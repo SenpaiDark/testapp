@@ -1,0 +1,18 @@
+{
+  "name": "mayor4code - Learn Python",
+  "short_name": "mayor4code",
+  "description": "Learn Python programming interactively with lessons, quizzes, and a code runner.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/img/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

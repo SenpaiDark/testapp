@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Lessons — mayor4code{% endblock %}
+{% block content %}
+<section class="section-head">
+  <p class="badge">Lessons</p>
+  <h1>Python Course Outline</h1>
+  <p class="muted">Complete each quiz to unlock the next lesson. Progress is saved automatically.</p>
+</section>
+
+<div class="grid grid-2">
+  {% for row in lesson_rows %}
+  <div class="card lesson-card">
+    <div class="card-top">
+      <h3>{{ row.lesson.order }}. {{ row.lesson.title }}</h3>
+      {% if row.progress.is_completed %}
+        <span class="status status-done">&check; Done</span>
+      {% elif row.unlocked %}
+        <span class="status status-unlocked">Unlocked</span>
+      {% else %}
+        <span class="status status-locked">Locked</span>
+      {% endif %}
+    </div>
+
+    <p class="muted text-sm">{{ row.lesson.summary|default:"No summary added yet." }}</p>
+
+    {% if row.progress %}
+      <p class="score-line">Last score: <strong>{{ row.progress.score }}%</strong></p>
+    {% endif %}
+
+    {% if row.unlocked %}
+      <a class="btn btn-primary" href="{% url 'lesson_detail' row.lesson.slug %}">
+        {% if row.progress.is_completed %}Review{% else %}Start Lesson{% endif %}
+      </a>
+    {% else %}
+      <button class="btn btn-disabled" disabled>Locked</button>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

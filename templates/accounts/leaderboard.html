@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Leaderboard — mayor4code{% endblock %}
+{% block content %}
+<section class="section-head">
+  <p class="badge">Leaderboard</p>
+  <h1>Top Learners</h1>
+  <p class="muted">Ranked by average quiz score and lessons completed.</p>
+</section>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>User</th>
+        <th class="leaderboard-score">Avg Score</th>
+        <th style="text-align:center;">Completed</th>
+        <th style="text-align:center;">Total Attempts</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in leaderboard %}
+      <tr>
+        <td class="leaderboard-rank">
+          {% if forloop.counter == 1 %}🥇
+          {% elif forloop.counter == 2 %}🥈
+          {% elif forloop.counter == 3 %}🥉
+          {% else %}{{ forloop.counter }}
+          {% endif %}
+        </td>
+        <td class="leaderboard-username">
+          {{ entry.username }}
+          {% if entry.username == request.user.username %}
+            <span class="leaderboard-you">(you)</span>
+          {% endif %}
+        </td>
+        <td class="leaderboard-score">{{ entry.avg_score }}%</td>
+        <td style="text-align:center;">{{ entry.completed }} / {{ entry.total_lessons }}</td>
+        <td style="text-align:center;color:var(--muted);">{{ entry.total_attempts }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" style="padding:32px;text-align:center;color:var(--muted);">
+          No data yet. Start taking quizzes to appear on the leaderboard!
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div style="text-align:center;margin-top:16px;">
+  <a class="btn btn-secondary" href="{% url 'dashboard' %}">&larr; Back to Dashboard</a>
+</div>
+{% endblock %}

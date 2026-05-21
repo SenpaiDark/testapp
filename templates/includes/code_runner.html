@@ -1,0 +1,13 @@
+{% load static %}
+<div class="code-runner">
+    <div class="code-runner-header">
+        <span>Python Code Runner</span>
+        <span class="code-runner-status"></span>
+    </div>
+    <textarea class="code-runner-textarea" placeholder="print('Hello, world!')" spellcheck="false">{{ initial_code|default:"" }}</textarea>
+    <div class="code-runner-actions">
+        <button class="code-runner-btn" type="button">▶ Run Code</button>
+        <span style="font-size:.75rem;color:var(--muted);align-self:center;">Ctrl+Enter to run</span>
+    </div>
+    <div class="code-runner-output">Click "Run Code" to execute Python in your browser.</div>
+</div>

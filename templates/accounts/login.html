@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login — mayor4code{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <div class="auth-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"/>
+        <polyline points="8 6 2 12 8 18"/>
+      </svg>
+      <span>mayor<span>4</span>code</span>
+    </div>
+
+    <h2>Welcome back</h2>
+    <p class="sub">Log in to continue your Python journey.</p>
+
+    {% if error %}
+    <div class="auth-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <form method="post" class="form-grid">
+      {% csrf_token %}
+
+      <div class="form-field floating-wrap has-icon">
+        <input type="text" name="username" id="id_username" required autofocus placeholder=" ">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        <label for="id_username">Username</label>
+      </div>
+
+      <div class="form-field floating-wrap">
+        <input type="password" name="password" id="id_password" required placeholder=" ">
+        <label for="id_password">Password</label>
+      </div>
+
+      <div class="form-field" style="margin-top:0;">
+        <a href="{% url 'password_reset' %}" class="text-xs muted" style="font-weight:600;">Forgot password?</a>
+      </div>
+
+      <button class="btn btn-primary" type="submit" style="margin-top:6px;">
+        <span class="btn-text">Login</span>
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      No account yet? <a href="{% url 'register' %}">Register</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

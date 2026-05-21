@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Server Error — mayor4code{% endblock %}
+{% block content %}
+<div class="error-page">
+  <div class="card" style="padding:48px 32px;max-width:500px;margin:0 auto;">
+    <p class="error-code">500</p>
+    <h1>Something Went Wrong</h1>
+    <p class="muted">An unexpected error occurred. Please try again later.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="{% url 'home' %}">Go Home</a>
+      <a class="btn btn-secondary" href="{% url 'dashboard' %}">Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
