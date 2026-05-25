@@ -145,7 +145,11 @@ html.theme-transitioning * {
 
 html {
   scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
+  /* Ensure consistent text scaling across browsers */
+  -webkit-text-size-adjust: 100%; /* Safari, Chrome, Android */
+  -moz-text-size-adjust: 100%;    /* Firefox */
+  -ms-text-size-adjust: 100%;     /* IE10+ */
+  text-size-adjust: 100%;         /* Standard */
 }
 
 body {
