@@ -8,21 +8,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const toggle = document.getElementById('themeToggle');
   const metaTheme = document.querySelector('meta[name="theme-color"]');
 
+  function toggleTheme() {
+    const isDark = !document.documentElement.classList.contains('dark');
+
+    document.documentElement.classList.add('theme-transitioning');
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+    if (metaTheme) {
+      metaTheme.content = isDark ? '#0b1220' : '#2563eb';
+    }
+
+    setTimeout(function () {
+      document.documentElement.classList.remove('theme-transitioning');
+    }, 300);
+  }
+
   if (toggle) {
-    toggle.addEventListener('click', function () {
-      const isDark = !document.documentElement.classList.contains('dark');
-
-      document.documentElement.classList.add('theme-transitioning');
-      document.documentElement.classList.toggle('dark', isDark);
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-      if (metaTheme) {
-        metaTheme.content = isDark ? '#0b1220' : '#2563eb';
-      }
-
-      setTimeout(function () {
-        document.documentElement.classList.remove('theme-transitioning');
-      }, 300);
+    toggle.addEventListener('click', toggleTheme);
+    toggle.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      toggleTheme();
     });
   }
 
