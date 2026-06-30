@@ -17,8 +17,7 @@
       </div>
 
       <h1>
-        Master Python
-        <span class="hero-grad">the right way</span>
+        <span id="matrix-title"></span><span class="matrix-cursor">|</span>
       </h1>
 
       <p>5 carefully-crafted lessons, instant quiz scoring, locked progression, and a live playground — everything you need to go from zero to certified Pythonista.</p>
@@ -367,5 +366,78 @@
   </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<style>
+.matrix-cursor {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 300;
+  animation: blink 0.7s step-end infinite;
+  margin-left: 2px;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+#matrix-title .plain { color: inherit; }
+#matrix-title .grad {
+  background: linear-gradient(90deg, var(--primary), #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+</style>
+<script>
+(function(){
+  var el = document.getElementById('matrix-title');
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&';
+  var full = 'Master Python the right way';
+  var gradStart = 14;
+  var revealed = [];
+  var scramble = [];
+  var i = 0;
+
+  function rand(){ return chars[Math.floor(Math.random() * chars.length)]; }
+
+  function render(){
+    var html = '';
+    for(var j = 0; j < revealed.length; j++){
+      var c = full[j];
+      if(j >= gradStart){
+        html += '<span class="grad">' + (c === ' ' ? '&nbsp;' : c) + '</span>';
+      } else {
+        html += '<span class="plain">' + (c === ' ' ? '&nbsp;' : c) + '</span>';
+      }
+    }
+    if(scramble.length){
+      var sc = scramble[0];
+      var cls = revealed.length >= gradStart ? 'grad' : 'plain';
+      html += '<span class="' + cls + '">' + sc + '</span>';
+    }
+    el.innerHTML = html;
+  }
+
+  function revealNext(){
+    if(i >= full.length){ scramble = []; render(); return; }
+    var scrambleCount = 0;
+    scramble = [rand()];
+    render();
+    var interval = setInterval(function(){
+      scramble = [rand()];
+      render();
+      scrambleCount++;
+      if(scrambleCount >= 2){
+        clearInterval(interval);
+        revealed.push(full[i]);
+        scramble = [];
+        render();
+        i++;
+        setTimeout(revealNext, full[i-1] === ' ' ? 15 : 22);
+      }
+    }, 20);
+  }
+
+  setTimeout(revealNext, 150);
+})();
+</script>
 {% endblock %}
 
