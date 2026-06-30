@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}mayor4code{% endblock %}</title>
+  <meta name="description" content="Learn Python with structured lessons, quizzes, and instant feedback." />
+
+  <!-- Prevent dark-mode flash + restore theme/accent/font-size -->
+  <script>
+    (function(){
+      var html = document.documentElement;
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      }
+      if (t === 'warm') {
+        html.style.setProperty('--primary',       '#704214');
+        html.style.setProperty('--primary-hover', '#5a3410');
+        html.style.setProperty('--primary-light', 'rgba(112,66,20,0.10)');
+        html.style.setProperty('--primary-ring',  'rgba(112,66,20,0.25)');
+        html.style.setProperty('--border',        '#c8a882');
+        html.style.setProperty('--border-2',      '#b08050');
+        html.style.setProperty('--surface',       '#fdf6ee');
+        html.style.setProperty('--surface-2',     '#f5e9d8');
+        html.style.setProperty('--surface-3',     '#ecdcc8');
+        html.style.setProperty('--bg',            '#fdf6ee');
+      }
+      var a = localStorage.getItem('accent');
+      if (a) {
+        try {
+          var ac = JSON.parse(a);
+          html.style.setProperty('--primary', ac.primary);
+          html.style.setProperty('--primary-hover', ac.hover);
+          html.style.setProperty('--primary-light', ac.light);
+          html.style.setProperty('--primary-ring', ac.light.replace('0.10','0.25'));
+        } catch(e){}
+      }
+      var fs = localStorage.getItem('font-size');
+      if (fs) html.style.fontSize = fs + 'px';
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+  <!-- CSS -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/design-system.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/components.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/pages.css' %}" />
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<nav class="pub-nav" id="pub-nav">
+  <div class="pub-nav-inner">
+    <a href="{% url 'home' %}" class="pub-logo">mayor<span>4</span>code</a>
+
+    <div class="pub-links">
+      <a href="{% url 'home' %}#features">Features</a>
+      <a href="{% url 'home' %}#how-it-works">How it Works</a>
+      <a href="{% url 'home' %}#faq">FAQ</a>
+    </div>
+
+    <div class="pub-nav-right">
+      <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">Login</a>
+      <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Get Started</a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="pub-mobile-nav" id="pub-mobile-nav" aria-hidden="true">
+  <a href="{% url 'home' %}#features" onclick="closeNav()">Features</a>
+  <a href="{% url 'home' %}#how-it-works" onclick="closeNav()">How it Works</a>
+  <a href="{% url 'home' %}#faq" onclick="closeNav()">FAQ</a>
+  <a href="{% url 'login' %}" class="btn btn-ghost">Login</a>
+  <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+</div>
+
+<div class="pub-content">
+  {% if messages %}
+  <div style="max-width:1100px;margin:16px auto 0;padding:0 24px;">
+    {% for msg in messages %}
+      <div class="alert alert-{{ msg.tags }}" role="alert">
+        <i class="ti ti-{% if msg.tags == 'success' %}circle-check{% elif msg.tags == 'error' %}circle-x{% else %}info-circle{% endif %}"></i>
+        {{ msg }}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+  <footer class="pub-footer">
+    <div class="container">
+      <div class="pub-footer-grid">
+        <div class="pub-footer-col">
+          <div class="pub-footer-brand">mayor<span>4</span>code</div>
+          <p class="pub-footer-tagline">Learn Python the structured way — lessons, quizzes, certificates, and a live playground.</p>
+        </div>
+        <div class="pub-footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="{% url 'home' %}#features">Features</a></li>
+            <li><a href="{% url 'home' %}#how-it-works">How it Works</a></li>
+            <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+          </ul>
+        </div>
+        <div class="pub-footer-col">
+          <h4>Account</h4>
+          <ul>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+          </ul>
+        </div>
+        <div class="pub-footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="{% url 'lesson_list' %}">All Lessons</a></li>
+            <li><a href="{% url 'playground' %}">Playground</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pub-footer-bottom">
+        <span>&copy; 2025 mayor4code. All rights reserved.</span>
+        <span>SenpaiDark 😑</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  btn.addEventListener('click', function(){
+    var html = document.documentElement;
+    html.classList.add('transitioning');
+    html.classList.toggle('dark');
+    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    setTimeout(function(){ html.classList.remove('transitioning'); }, 420);
+  });
+})();
+
+(function(){
+  var nav = document.getElementById('pub-nav');
+  if (nav) {
+    window.addEventListener('scroll', function(){
+      nav.classList.toggle('scrolled', window.scrollY > 24);
+    }, {passive: true});
+  }
+  var h = document.getElementById('nav-hamburger');
+  var m = document.getElementById('pub-mobile-nav');
+  if (h && m) {
+    h.addEventListener('click', function(){
+      var open = m.classList.toggle('open');
+      m.setAttribute('aria-hidden', open ? 'false' : 'true');
+    });
+  }
+})();
+
+function closeNav(){
+  var m = document.getElementById('pub-mobile-nav');
+  if (m){ m.classList.remove('open'); m.setAttribute('aria-hidden','true'); }
+}
+
+function showToast(msg, type){
+  type = type || 'info';
+  var c = document.getElementById('toast-container');
+  if (!c) return;
+  var t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(function(){ t.classList.add('out'); setTimeout(function(){ t.remove(); }, 320); }, 3000);
+}
+
+document.querySelectorAll('.faq-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var item = btn.closest('.faq-item');
+    var isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(function(el){ el.classList.remove('open'); });
+    if (!isOpen) item.classList.add('open');
+  });
+});
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

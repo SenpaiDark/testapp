@@ -1,18 +1,32 @@
 {
-  "name": "mayor4code - Learn Python",
+  "name": "mayor4code — Learn Python",
   "short_name": "mayor4code",
-  "description": "Learn Python programming interactively with lessons, quizzes, and a code runner.",
+  "description": "Structured Python learning with lessons, quizzes, certificates and a live playground.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#f8faff",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
+  "categories": ["education"],
   "icons": [
     {
       "src": "/static/img/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard/",
+      "description": "Go to your learning dashboard"
+    },
+    {
+      "name": "Playground",
+      "url": "/playground/",
+      "description": "Open the Python playground"
     }
   ]
 }

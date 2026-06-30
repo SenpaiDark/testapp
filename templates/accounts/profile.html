@@ -1,34 +1,116 @@
-{% extends 'base.html' %}
-{% block title %}Profile — mayor4code{% endblock %}
+{% extends 'base_auth.html' %}
+{% block title %}{{ profile_user.username }} — mayor4code{% endblock %}
+{% block page_title %}Profile{% endblock %}
+
 {% block content %}
-<section class="section-head">
-  <p class="badge">Profile</p>
-  <h1>{{ profile_user.username }}</h1>
-</section>
 
-<div class="grid" style="max-width:700px;">
-  <div class="card stat-card">
-    <h3 style="margin:0 0 16px;font-size:var(--text-lg);">Account Info</h3>
-    <table>
-      <tr><td class="muted" style="font-weight:600;">Username</td><td>{{ profile_user.username }}</td></tr>
-      <tr><td class="muted" style="font-weight:600;">Email</td><td>{{ profile_user.email|default:"Not set" }}</td></tr>
-      <tr><td class="muted" style="font-weight:600;">Joined</td><td>{{ profile_user.date_joined|date:"F j, Y" }}</td></tr>
-      <tr><td class="muted" style="font-weight:600;">Last Login</td><td>{{ profile_user.last_login|date:"F j, Y" }}</td></tr>
-    </table>
+<!-- Profile header -->
+<div class="profile-header">
+  <div class="profile-avatar">{{ profile_user.username|first|upper }}</div>
+  <div class="profile-info">
+    <h2>{{ profile_user.username }}</h2>
+    <div class="profile-meta">
+      <span class="profile-meta-item"><i class="ti ti-calendar"></i> Joined {{ profile_user.date_joined|date:"F Y" }}</span>
+      <span class="profile-meta-item"><i class="ti ti-books"></i> {{ completed_count }}/{{ total_count }} lessons</span>
+      {% if avg_score %}<span class="profile-meta-item"><i class="ti ti-chart-bar"></i> {{ avg_score|floatformat:0 }}% avg</span>{% endif %}
+      {% if all_done %}<span class="profile-meta-item" style="color:var(--gold);"><i class="ti ti-certificate"></i> Certified</span>{% endif %}
+    </div>
   </div>
+  {% if user == profile_user %}
+  <a href="{% url 'settings' %}" class="btn btn-secondary btn-sm" style="flex-shrink:0;">
+    <i class="ti ti-settings"></i> Edit Profile
+  </a>
+  {% endif %}
+</div>
 
-  <div class="card stat-card">
-    <h3 style="margin:0 0 16px;font-size:var(--text-lg);">Learning Stats</h3>
-    <table>
-      <tr><td class="muted" style="font-weight:600;">Lessons Completed</td><td>{{ completed_count }} / {{ total_count }}</td></tr>
-      <tr><td class="muted" style="font-weight:600;">Overall Progress</td><td>{{ progress_pct }}%</td></tr>
-      <tr><td class="muted" style="font-weight:600;">Average Score</td><td>{{ avg_score|default:"N/A" }}%</td></tr>
-      <tr><td class="muted" style="font-weight:600;">Total Quiz Attempts</td><td>{{ total_attempts }}</td></tr>
-    </table>
+<!-- Stats -->
+<div class="profile-stats">
+  <div class="stat-card">
+    <div class="stat-icon blue"><i class="ti ti-books"></i></div>
+    <div class="stat-value">{{ completed_count }}/{{ total_count }}</div>
+    <div class="stat-label">Lessons Done</div>
   </div>
-
-  <div style="text-align:center;margin-top:8px;">
-    <a class="btn btn-secondary" href="{% url 'dashboard' %}">&larr; Back to Dashboard</a>
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="ti ti-chart-bar"></i></div>
+    <div class="stat-value">{{ avg_score|floatformat:0|default:"—" }}{% if avg_score %}%{% endif %}</div>
+    <div class="stat-label">Avg Score</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon amber"><i class="ti ti-refresh"></i></div>
+    <div class="stat-value">{{ total_attempts|default:"0" }}</div>
+    <div class="stat-label">Quiz Attempts</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon purple"><i class="ti ti-percent"></i></div>
+    <div class="stat-value">{{ progress_pct|floatformat:0 }}%</div>
+    <div class="stat-label">Progress</div>
   </div>
 </div>
+
+<!-- Progress -->
+<div class="card" style="padding:20px;margin-bottom:20px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h3 style="font-size:var(--text-base);margin:0;">Course Progress</h3>
+    <span style="font-size:var(--text-sm);color:var(--primary);font-weight:var(--fw-semibold);">{{ completed_count }}/{{ total_count }}</span>
+  </div>
+  <div class="progress-track progress-lg">
+    <div class="progress-fill" style="width:{{ progress_pct }}%;"></div>
+  </div>
+</div>
+
+<!-- Badges -->
+<h3 style="font-size:var(--text-lg);margin-bottom:16px;">Achievements</h3>
+<div class="badges-grid">
+  <!-- First Step -->
+  <div class="badge-card {% if completed_count < 1 %}locked{% endif %}">
+    <div class="badge-emoji">🐍</div>
+    <div class="badge-name">First Step</div>
+    <div class="badge-desc">Complete your first lesson</div>
+  </div>
+
+  <!-- Halfway -->
+  <div class="badge-card {% if completed_count < 3 %}locked{% endif %}">
+    <div class="badge-emoji">⚡</div>
+    <div class="badge-name">Halfway There</div>
+    <div class="badge-desc">Complete 3 lessons</div>
+  </div>
+
+  <!-- Python Pro -->
+  <div class="badge-card {% if not all_done %}locked{% endif %}">
+    <div class="badge-emoji">🎓</div>
+    <div class="badge-name">Python Pro</div>
+    <div class="badge-desc">Complete all lessons</div>
+  </div>
+
+  <!-- High Scorer -->
+  <div class="badge-card {% if not avg_score or avg_score < 90 %}locked{% endif %}">
+    <div class="badge-emoji">🏆</div>
+    <div class="badge-name">High Scorer</div>
+    <div class="badge-desc">Average score ≥ 90%</div>
+  </div>
+
+  <!-- Perfect Attempt -->
+  <div class="badge-card {% if not avg_score or avg_score < 100 %}locked{% endif %}">
+    <div class="badge-emoji">💎</div>
+    <div class="badge-name">Perfectionist</div>
+    <div class="badge-desc">Score 100% on a quiz</div>
+  </div>
+
+  <!-- Certified -->
+  <div class="badge-card {% if not all_done %}locked{% endif %}">
+    <div class="badge-emoji">📜</div>
+    <div class="badge-name">Certified</div>
+    <div class="badge-desc">Earn your certificate</div>
+  </div>
+</div>
+
+{% if all_done %}
+<div style="margin-top:24px;text-align:center;">
+  <a href="{% url 'my_certificate' %}" class="btn btn-primary btn-lg">
+    <i class="ti ti-certificate"></i> View My Certificate
+  </a>
+</div>
+{% endif %}
+
 {% endblock %}
+

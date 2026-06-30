@@ -1,55 +1,105 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
 {% block title %}Leaderboard — mayor4code{% endblock %}
+{% block page_title %}Leaderboard{% endblock %}
+
 {% block content %}
-<section class="section-head">
-  <p class="badge">Leaderboard</p>
-  <h1>Top Learners</h1>
-  <p class="muted">Ranked by average quiz score and lessons completed.</p>
-</section>
 
-<div class="table-wrap">
-  <table>
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>User</th>
-        <th class="leaderboard-score">Avg Score</th>
-        <th style="text-align:center;">Completed</th>
-        <th style="text-align:center;">Total Attempts</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for entry in leaderboard %}
-      <tr>
-        <td class="leaderboard-rank">
-          {% if forloop.counter == 1 %}🥇
-          {% elif forloop.counter == 2 %}🥈
-          {% elif forloop.counter == 3 %}🥉
-          {% else %}{{ forloop.counter }}
-          {% endif %}
-        </td>
-        <td class="leaderboard-username">
-          {{ entry.username }}
-          {% if entry.username == request.user.username %}
-            <span class="leaderboard-you">(you)</span>
-          {% endif %}
-        </td>
-        <td class="leaderboard-score">{{ entry.avg_score }}%</td>
-        <td style="text-align:center;">{{ entry.completed }} / {{ entry.total_lessons }}</td>
-        <td style="text-align:center;color:var(--muted);">{{ entry.total_attempts }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5" style="padding:32px;text-align:center;color:var(--muted);">
-          No data yet. Start taking quizzes to appear on the leaderboard!
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="page-header">
+  <h1>Leaderboard</h1>
+  <p>Rankings based on average quiz score and lessons completed.</p>
 </div>
 
-<div style="text-align:center;margin-top:16px;">
-  <a class="btn btn-secondary" href="{% url 'dashboard' %}">&larr; Back to Dashboard</a>
+<!-- Podium (top 3) -->
+{% if leaderboard %}
+<div class="card" style="padding:24px 16px;margin-bottom:24px;overflow:hidden;">
+  <div class="podium">
+    <!-- 2nd -->
+    {% if leaderboard|length >= 2 %}
+    <div class="podium-item">
+      <div class="podium-name">{{ leaderboard.1.username }}</div>
+      <div class="podium-score">{{ leaderboard.1.avg_score|floatformat:0 }}%</div>
+      <div class="podium-avatar silver">{{ leaderboard.1.username|first|upper }}</div>
+      <div class="podium-block second">🥈</div>
+    </div>
+    {% endif %}
+
+    <!-- 1st -->
+    <div class="podium-item">
+      <div class="podium-name" style="font-weight:var(--fw-bold);">{{ leaderboard.0.username }}</div>
+      <div class="podium-score" style="color:var(--gold);">{{ leaderboard.0.avg_score|floatformat:0 }}%</div>
+      <div class="podium-avatar gold">{{ leaderboard.0.username|first|upper }}</div>
+      <div class="podium-block first">🥇</div>
+    </div>
+
+    <!-- 3rd -->
+    {% if leaderboard|length >= 3 %}
+    <div class="podium-item">
+      <div class="podium-name">{{ leaderboard.2.username }}</div>
+      <div class="podium-score">{{ leaderboard.2.avg_score|floatformat:0 }}%</div>
+      <div class="podium-avatar bronze">{{ leaderboard.2.username|first|upper }}</div>
+      <div class="podium-block third">🥉</div>
+    </div>
+    {% endif %}
+  </div>
 </div>
+{% endif %}
+
+<!-- Full table -->
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:48px;">#</th>
+          <th>Player</th>
+          <th style="text-align:center;">Avg Score</th>
+          <th style="text-align:center;">Lessons</th>
+          <th style="text-align:center;">Attempts</th>
+          <th style="text-align:center;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in leaderboard %}
+        <tr {% if entry.username == user.username %}class="lb-row-self"{% endif %}>
+          <td>
+            {% if forloop.counter == 1 %}<span style="color:var(--gold);font-size:1.1rem;">🥇</span>
+            {% elif forloop.counter == 2 %}<span style="font-size:1.1rem;">🥈</span>
+            {% elif forloop.counter == 3 %}<span style="font-size:1.1rem;">🥉</span>
+            {% else %}<span style="color:var(--muted);font-weight:var(--fw-semibold);">{{ forloop.counter }}</span>{% endif %}
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="avatar avatar-sm">{{ entry.username|first|upper }}</div>
+              <div>
+                <div style="font-weight:var(--fw-semibold);">{{ entry.username }} {% if entry.username == user.username %}<span class="lb-you">You</span>{% endif %}</div>
+                {% if entry.matric_number %}<div style="font-size:var(--text-xs);color:var(--muted);">{{ entry.matric_number }}</div>{% endif %}
+              </div>
+            </div>
+          </td>
+          <td style="text-align:center;">
+            <span style="font-weight:var(--fw-bold);color:{% if entry.avg_score >= 90 %}var(--success){% elif entry.avg_score >= 60 %}var(--primary){% else %}var(--danger){% endif %};">
+              {{ entry.avg_score|floatformat:1 }}%
+            </span>
+          </td>
+          <td style="text-align:center;">{{ entry.completed }}/{{ entry.total_lessons }}</td>
+          <td style="text-align:center;color:var(--muted);">{{ entry.total_attempts }}</td>
+          <td style="text-align:center;">
+            {% if entry.completed == entry.total_lessons %}
+              <span class="badge badge-green"><i class="ti ti-certificate"></i> Certified</span>
+            {% elif entry.completed > 0 %}
+              <span class="badge badge-blue">In Progress</span>
+            {% else %}
+              <span class="badge badge-muted">Not Started</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted);">No data yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
 {% endblock %}
+

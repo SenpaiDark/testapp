@@ -1,0 +1,26 @@
+{% extends 'base_public.html' %}
+{% block title %}Email Verified — mayor4code{% endblock %}
+
+{% block content %}
+<div class="auth-shell" style="min-height:60vh;align-items:center;">
+  <div class="auth-panel" style="max-width:480px;margin:0 auto;">
+    <div class="auth-card" style="text-align:center;padding:48px 32px;">
+      {% if success %}
+        <div style="font-size:3.5rem;margin-bottom:20px;">✅</div>
+        <h1 style="font-size:var(--text-2xl);margin-bottom:8px;">Email Verified!</h1>
+        <p style="color:var(--muted);margin-bottom:28px;">Your account is now active. You can log in and start learning.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+          <i class="ti ti-login"></i> Log In Now
+        </a>
+      {% else %}
+        <div style="font-size:3.5rem;margin-bottom:20px;">❌</div>
+        <h1 style="font-size:var(--text-2xl);margin-bottom:8px;">Invalid Link</h1>
+        <p style="color:var(--muted);margin-bottom:28px;">This verification link is invalid or has expired. Please register again.</p>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+          <i class="ti ti-user-plus"></i> Register
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

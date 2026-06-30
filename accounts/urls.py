@@ -11,6 +11,11 @@ urlpatterns = [
     path("profile/", views.profile_view, name="profile"),
     path("leaderboard/", views.leaderboard_view, name="leaderboard"),
     path("all-done/", views.all_done_view, name="all_done"),
+    path("certificate/", views.my_certificate, name="my_certificate"),
+    path("settings/", views.settings_view, name="settings"),
+    path("playground/", views.playground, name="playground"),
+    path("execute-python/", views.execute_python, name="execute_python"),
+    path("verify-email/<uidb64>/<token>/", views.verify_email, name="verify_email"),
     # Password Reset
     path("password-reset/", auth_views.PasswordResetView.as_view(template_name="accounts/password_reset.html"), name="password_reset"),
     path("password-reset/done/", auth_views.PasswordResetDoneView.as_view(template_name="accounts/password_reset_done.html"), name="password_reset_done"),

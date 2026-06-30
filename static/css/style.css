@@ -1,6 +1,5 @@
-/* ── mayor4code — Main Stylesheet ──────────────────────────
-   Imports modular CSS architecture in cascade order.
-   ─────────────────────────────────────────────────────────── */
+@charset "UTF-8";
+/* mayor4code -- Main Stylesheet */
 @import url('design-system.css');
 @import url('components.css');
 @import url('layout.css');

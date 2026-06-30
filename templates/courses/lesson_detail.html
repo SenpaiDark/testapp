@@ -1,63 +1,92 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
 {% block title %}{{ lesson.title }} — mayor4code{% endblock %}
+{% block page_title %}{{ lesson.title }}{% endblock %}
+
 {% block content %}
-<div class="layout">
-  <aside class="card sidebar">
-    <p class="badge">Lesson {{ lesson.order }}</p>
-    <h3>{{ lesson.title }}</h3>
-    <p class="muted text-sm" style="margin:0 0 14px;">{{ lesson.summary|default:"" }}</p>
 
-    {% if progress %}
-      <p class="text-sm" style="margin:0 0 4px;">Score: <strong>{{ progress.score }}%</strong></p>
-      <p class="text-xs muted" style="margin:0 0 4px;">Attempts: {{ progress.attempts }}</p>
-      <p class="text-sm" style="margin:0 0 14px;color:{% if progress.is_completed %}var(--success){% else %}var(--danger){% endif %};">
-        {% if progress.is_completed %}&check; Passed{% else %}&cross; Not passed yet{% endif %}
-      </p>
+<div class="lesson-layout">
+
+  <!-- Sidebar nav -->
+  <div class="lesson-sidebar">
+    <div style="font-size:var(--text-xs);font-weight:var(--fw-bold);text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:12px;">In this lesson</div>
+    {% if prev_lesson %}
+    <a href="{% url 'lesson_detail' prev_lesson.slug %}" class="btn btn-ghost btn-block btn-sm" style="justify-content:flex-start;margin-bottom:6px;">
+      <i class="ti ti-arrow-left"></i> {{ prev_lesson.title }}
+    </a>
+    {% endif %}
+    <div style="padding:10px 12px;background:var(--primary-light);border-radius:var(--radius);border-left:3px solid var(--primary);font-size:var(--text-sm);font-weight:var(--fw-semibold);color:var(--primary);margin-bottom:6px;">
+      {{ lesson.title }}
+    </div>
+    {% if next_lesson %}
+    <a href="{% url 'lesson_detail' next_lesson.slug %}" class="btn btn-ghost btn-block btn-sm" style="justify-content:flex-start;margin-bottom:6px;opacity:{% if not progress.is_completed %}0.4{% else %}1{% endif %};">
+      {{ next_lesson.title }} <i class="ti ti-arrow-right"></i>
+    </a>
     {% endif %}
 
-    <div class="sidebar-nav">
-      {% if prev_lesson %}
-        <a class="btn btn-secondary btn-sm" href="{% url 'lesson_detail' prev_lesson.slug %}">&larr; Prev</a>
-      {% endif %}
-      {% if next_lesson and progress.is_completed %}
-        <a class="btn btn-primary btn-sm" href="{% url 'lesson_detail' next_lesson.slug %}">Next &rarr;</a>
-      {% endif %}
+    <div style="border-top:1px solid var(--border);margin:16px 0;"></div>
+
+    {% if progress.is_completed %}
+    <div style="background:var(--success-light);border-radius:var(--radius);padding:12px;text-align:center;">
+      <i class="ti ti-circle-check" style="color:var(--success);font-size:1.3rem;"></i>
+      <div style="font-size:var(--text-xs);font-weight:var(--fw-semibold);color:var(--success);margin-top:4px;">Passed — {{ progress.score|floatformat:0 }}%</div>
     </div>
-
-    <div style="margin-top:14px;">
-      <a class="btn btn-ghost btn-sm" href="{% url 'lesson_list' %}">&larr; All Lessons</a>
-    </div>
-  </aside>
-
-  <section class="card content-card">
-    <p class="badge">Lesson Content</p>
-    <h1>{{ lesson.title }}</h1>
-    <div class="lesson-content">{{ lesson.content|safe }}</div>
-
-    <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
-      <p class="badge">Try It Yourself</p>
-      <p class="muted text-sm" style="margin:0 0 12px;">Write and run Python code directly in your browser.</p>
-      {% include 'includes/code_runner.html' %}
-    </div>
-
-    {% if lesson.quiz %}
-      <div class="actions" style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
-        {% if progress and not progress.is_completed %}
-          <a class="btn btn-primary" href="{% url 'take_quiz' lesson.slug %}">&#9997; Retry Quiz</a>
-        {% elif progress %}
-          <a class="btn btn-secondary" href="{% url 'take_quiz' lesson.slug %}">&#9997; Retake Quiz</a>
-        {% else %}
-          <a class="btn btn-primary" href="{% url 'take_quiz' lesson.slug %}">&#9997; Take the Quiz</a>
-        {% endif %}
-        {% if progress %}
-          <span class="text-sm muted" style="align-self:center;">
-            Last score: {{ progress.score }}% ({{ progress.attempts }} attempt{{ progress.attempts|pluralize }})
-          </span>
-        {% endif %}
-      </div>
     {% else %}
-      <p class="muted" style="margin-top:20px;">No quiz added for this lesson yet.</p>
+    <a href="{% url 'take_quiz' lesson.slug %}" class="btn btn-primary btn-block">
+      <i class="ti ti-clipboard-check"></i> Take Quiz
+    </a>
     {% endif %}
-  </section>
+
+    <a href="{% url 'lesson_list' %}" class="btn btn-ghost btn-block btn-sm" style="margin-top:8px;">
+      <i class="ti ti-arrow-left"></i> All Lessons
+    </a>
+  </div>
+
+  <!-- Content -->
+  <div class="lesson-content-card">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+      <i class="ti ti-chevron-right"></i>
+      <a href="{% url 'lesson_list' %}">Lessons</a>
+      <i class="ti ti-chevron-right"></i>
+      <span style="color:var(--text);">{{ lesson.title }}</span>
+    </div>
+
+    {% if progress.is_completed %}
+    <div class="alert alert-success" style="margin-bottom:24px;" role="alert">
+      <i class="ti ti-circle-check"></i>
+      You passed this lesson with {{ progress.score|floatformat:0 }}%!
+      {% if next_lesson %}
+        <a href="{% url 'lesson_detail' next_lesson.slug %}" style="color:var(--success);font-weight:var(--fw-semibold);margin-left:8px;">Next: {{ next_lesson.title }} →</a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="lesson-body">
+      {{ lesson.content|safe }}
+    </div>
+
+    <!-- Bottom nav -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;">
+      {% if prev_lesson %}
+      <a href="{% url 'lesson_detail' prev_lesson.slug %}" class="btn btn-secondary">
+        <i class="ti ti-arrow-left"></i> {{ prev_lesson.title }}
+      </a>
+      {% else %}<span></span>{% endif %}
+
+      {% if progress.is_completed and next_lesson %}
+      <a href="{% url 'lesson_detail' next_lesson.slug %}" class="btn btn-primary">
+        {{ next_lesson.title }} <i class="ti ti-arrow-right"></i>
+      </a>
+      {% elif not progress.is_completed %}
+      <a href="{% url 'take_quiz' lesson.slug %}" class="btn btn-primary">
+        <i class="ti ti-clipboard-check"></i> Take Quiz to Continue
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
 </div>
+
 {% endblock %}
+

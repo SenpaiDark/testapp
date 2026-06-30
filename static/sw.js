@@ -1,10 +1,10 @@
-const CACHE = "mayor4code-v1";
+const CACHE = "mayor4code-v3";
 const STATIC_ASSETS = [
   "/",
-  "/static/css/style.css",
-  "/static/js/theme-toggle.js",
-  "/static/js/password-toggle.js",
-  "/static/js/code-runner.js",
+  "/static/css/design-system.css",
+  "/static/css/components.css",
+  "/static/css/layout.css",
+  "/static/css/pages.css",
   "/static/img/favicon.svg",
   "/static/manifest.json",
 ];

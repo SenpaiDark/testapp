@@ -20,7 +20,15 @@ def lesson_list(request):
             "unlocked": unlocked,
             "progress": progress_map.get(lesson.id),
         })
-    return render(request, "courses/lesson_list.html", {"lesson_rows": rows})
+    total_count = len(lessons)
+    completed_count = sum(1 for r in rows if r["progress"] and r["progress"].is_completed)
+    progress_pct = round((completed_count / total_count) * 100) if total_count else 0
+    return render(request, "courses/lesson_list.html", {
+        "lesson_rows": rows,
+        "total_count": total_count,
+        "completed_count": completed_count,
+        "progress_pct": progress_pct,
+    })
 
 
 @login_required

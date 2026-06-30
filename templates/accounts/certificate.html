@@ -1,0 +1,73 @@
+{% extends 'base_auth.html' %}
+{% block title %}Certificate — mayor4code{% endblock %}
+{% block page_title %}Certificate{% endblock %}
+
+{% block content %}
+
+{% if not all_done %}
+<div class="cert-wrap">
+  <div class="empty-state" style="padding:80px 24px;">
+    <div class="empty-state-emoji">🔒</div>
+    <h3>Certificate Locked</h3>
+    <p>Complete all {{ total_lessons }} lessons to earn your certificate.</p>
+    <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;">
+      <a href="{% url 'lesson_list' %}" class="btn btn-primary"><i class="ti ti-books"></i> View Lessons</a>
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary">Dashboard</a>
+    </div>
+  </div>
+</div>
+{% else %}
+
+<div class="cert-wrap">
+
+  <!-- Certificate card -->
+  <div class="cert-card" id="cert-card">
+    <div class="cert-seal">🎓</div>
+
+    <div class="cert-issuer">mayor4code — Python Certification</div>
+    <div class="cert-title-text">Certificate of Completion</div>
+
+    <p class="cert-line">This certifies that</p>
+    <div class="cert-student-name">{{ certificate.user.get_full_name|default:certificate.user.username }}</div>
+    <p class="cert-course-name">has successfully completed the <strong>Python Fundamentals</strong> course</p>
+
+    <div class="cert-meta">
+      <div class="cert-meta-item">
+        <div class="cert-meta-val">{{ completed_count }}/{{ total_lessons }}</div>
+        <div class="cert-meta-lbl">Lessons</div>
+      </div>
+      <div class="cert-meta-item">
+        <div class="cert-meta-val">{{ certificate.avg_score|floatformat:0 }}%</div>
+        <div class="cert-meta-lbl">Avg Score</div>
+      </div>
+      <div class="cert-meta-item">
+        <div class="cert-meta-val">{{ certificate.issued_at|date:"M Y" }}</div>
+        <div class="cert-meta-lbl">Issued</div>
+      </div>
+    </div>
+
+    <div class="cert-code">Verification Code: {{ certificate.certificate_code }}</div>
+  </div>
+
+  <!-- Actions -->
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;">
+    <button onclick="window.print()" class="btn btn-primary btn-lg">
+      <i class="ti ti-printer"></i> Print / Save PDF
+    </button>
+    <a href="{% url 'leaderboard' %}" class="btn btn-secondary btn-lg">
+      <i class="ti ti-trophy"></i> View Leaderboard
+    </a>
+  </div>
+
+  <!-- Verification info -->
+  <div class="card" style="padding:20px;text-align:center;">
+    <div style="font-size:var(--text-xs);color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;font-weight:var(--fw-semibold);">Certificate Code</div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-2xl);font-weight:var(--fw-extrabold);color:var(--primary);letter-spacing:0.08em;">{{ certificate.certificate_code }}</div>
+    <div style="font-size:var(--text-xs);color:var(--muted);margin-top:8px;">Share this code to verify your certificate</div>
+  </div>
+
+</div>
+
+{% endif %}
+{% endblock %}
+

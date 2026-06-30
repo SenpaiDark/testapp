@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}mayor4code{% endblock %}</title>
+  <meta name="description" content="Learn Python with structured lessons, quizzes, and instant feedback." />
+
+  <!-- Prevent dark-mode flash + restore theme/accent/font-size -->
+  <script>
+    (function(){
+      var html = document.documentElement;
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      }
+      if (t === 'warm') {
+        html.style.setProperty('--primary',       '#704214');
+        html.style.setProperty('--primary-hover', '#5a3410');
+        html.style.setProperty('--primary-light', 'rgba(112,66,20,0.10)');
+        html.style.setProperty('--primary-ring',  'rgba(112,66,20,0.25)');
+        html.style.setProperty('--border',        '#c8a882');
+        html.style.setProperty('--border-2',      '#b08050');
+        html.style.setProperty('--surface',       '#fdf6ee');
+        html.style.setProperty('--surface-2',     '#f5e9d8');
+        html.style.setProperty('--surface-3',     '#ecdcc8');
+        html.style.setProperty('--bg',            '#fdf6ee');
+      }
+      var a = localStorage.getItem('accent');
+      if (a) {
+        try {
+          var ac = JSON.parse(a);
+          html.style.setProperty('--primary', ac.primary);
+          html.style.setProperty('--primary-hover', ac.hover);
+          html.style.setProperty('--primary-light', ac.light);
+          html.style.setProperty('--primary-ring', ac.light.replace('0.10','0.25'));
+        } catch(e){}
+      }
+      var fs = localStorage.getItem('font-size');
+      if (fs) html.style.fontSize = fs + 'px';
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+  <!-- CSS -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/design-system.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/components.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/pages.css' %}" />
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% with url_name=request.resolver_match.url_name %}
+
+<!-- Sidebar overlay (mobile) -->
+<div class="sb-overlay" id="sb-overlay" aria-hidden="true"></div>
+
+<!-- Sidebar -->
+<aside class="app-sidebar" id="app-sidebar" aria-label="Main navigation">
+  <div class="sb-brand">
+    <a href="{% url 'home' %}" class="sb-logo">mayor<span>4</span>code</a>
+    <button class="sb-close" id="sb-close" aria-label="Close sidebar">
+      <i class="ti ti-x"></i>
+    </button>
+  </div>
+
+  <nav class="sb-nav">
+    <span class="sb-section-label">Main</span>
+
+    <a href="{% url 'dashboard' %}"
+       class="sb-link {% if url_name == 'dashboard' %}active{% endif %}">
+      <i class="ti ti-layout-dashboard"></i>
+      Dashboard
+    </a>
+
+    <a href="{% url 'lesson_list' %}"
+       class="sb-link {% if url_name == 'lesson_list' or url_name == 'lesson_detail' %}active{% endif %}">
+      <i class="ti ti-books"></i>
+      Lessons
+    </a>
+
+    <a href="{% url 'playground' %}"
+       class="sb-link {% if url_name == 'playground' %}active{% endif %}">
+      <i class="ti ti-terminal-2"></i>
+      Playground
+    </a>
+
+    <span class="sb-section-label">Community</span>
+
+    <a href="{% url 'leaderboard' %}"
+       class="sb-link {% if url_name == 'leaderboard' %}active{% endif %}">
+      <i class="ti ti-trophy"></i>
+      Leaderboard
+    </a>
+
+    <span class="sb-section-label">Account</span>
+
+    <a href="{% url 'profile' %}"
+       class="sb-link {% if url_name == 'profile' %}active{% endif %}">
+      <i class="ti ti-user-circle"></i>
+      Profile
+    </a>
+
+    <a href="{% url 'settings' %}"
+       class="sb-link {% if url_name == 'settings' %}active{% endif %}">
+      <i class="ti ti-settings"></i>
+      Settings
+    </a>
+
+    {% if user.is_staff %}
+    <span class="sb-section-label">Admin</span>
+    <a href="{% url 'admin:index' %}" class="sb-link" target="_blank">
+      <i class="ti ti-shield-check"></i>
+      Admin Panel
+    </a>
+    {% endif %}
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="avatar avatar-sm">{{ user.username|first|upper }}</div>
+      <div class="sb-user-meta">
+        <span class="sb-username">{{ user.username }}</span>
+        <span class="sb-user-role">Student</span>
+      </div>
+      <form method="post" action="{% url 'logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="sb-logout" title="Logout">
+          <i class="ti ti-logout"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</aside>
+
+<!-- App shell -->
+<div class="app-shell">
+  <header class="app-topbar">
+    <button class="app-hamburger" id="app-hamburger" aria-label="Open sidebar">
+      <span></span><span></span><span></span>
+    </button>
+
+    <span class="app-page-title">{% block page_title %}Dashboard{% endblock %}</span>
+
+    <div class="app-topbar-right">
+      <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-main">
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags }} mb-16" role="alert">
+          <i class="ti ti-{% if msg.tags == 'success' %}circle-check{% elif msg.tags == 'error' %}circle-x{% elif msg.tags == 'warning' %}alert-triangle{% else %}info-circle{% endif %}"></i>
+          {{ msg }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+{% endwith %}
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  btn.addEventListener('click', function(){
+    var html = document.documentElement;
+    html.classList.add('transitioning');
+    html.classList.toggle('dark');
+    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    setTimeout(function(){ html.classList.remove('transitioning'); }, 420);
+  });
+})();
+
+(function(){
+  var sidebar   = document.getElementById('app-sidebar');
+  var overlay   = document.getElementById('sb-overlay');
+  var hamburger = document.getElementById('app-hamburger');
+  var closeBtn  = document.getElementById('sb-close');
+  if (!sidebar) return;
+  function openSidebar(){
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+    overlay.removeAttribute('aria-hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar(){
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+  hamburger && hamburger.addEventListener('click', openSidebar);
+  closeBtn  && closeBtn.addEventListener('click', closeSidebar);
+  overlay   && overlay.addEventListener('click', closeSidebar);
+})();
+
+function showToast(msg, type){
+  type = type || 'info';
+  var c = document.getElementById('toast-container');
+  if (!c) return;
+  var t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(function(){ t.classList.add('out'); setTimeout(function(){ t.remove(); }, 320); }, 3000);
+}
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

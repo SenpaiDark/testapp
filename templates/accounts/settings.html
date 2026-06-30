@@ -1,0 +1,280 @@
+{% extends 'base_auth.html' %}
+{% block title %}Settings — mayor4code{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>Settings</h1>
+  <p>Manage your account, appearance, and security preferences.</p>
+</div>
+
+<div class="settings-layout">
+
+  <!-- Settings nav -->
+  <div class="card" style="padding:8px;">
+    <div class="settings-nav">
+      <button class="settings-tab active" onclick="switchTab('profile', this)">
+        <i class="ti ti-user"></i> Profile
+      </button>
+      <button class="settings-tab" onclick="switchTab('appearance', this)">
+        <i class="ti ti-palette"></i> Appearance
+      </button>
+      <button class="settings-tab" onclick="switchTab('security', this)">
+        <i class="ti ti-lock"></i> Security
+      </button>
+    </div>
+  </div>
+
+  <!-- Panels -->
+  <div>
+
+    <!-- Profile panel -->
+    <div class="card settings-panel active" id="panel-profile" style="padding:24px;">
+      <h3 style="font-size:var(--text-lg);margin-bottom:20px;">Profile Information</h3>
+
+      <form method="post" action="{% url 'settings' %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update_profile" />
+
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+          <div class="avatar avatar-xl">{{ user.username|first|upper }}</div>
+          <div>
+            <div style="font-weight:var(--fw-semibold);">{{ user.username }}</div>
+            <div style="font-size:var(--text-xs);color:var(--muted);">Avatar is your first initial</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-input" value="{{ user.username }}" disabled />
+          <span class="form-hint">Username cannot be changed</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_email">Email Address</label>
+          <input type="email" id="id_email" name="email" class="form-input"
+                 value="{{ user.email }}" placeholder="your@email.com" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_first_name">First Name</label>
+          <input type="text" id="id_first_name" name="first_name" class="form-input"
+                 value="{{ user.first_name }}" placeholder="Optional" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_matric_number">Matric Number</label>
+          <input type="text" id="id_matric_number" name="matric_number" class="form-input"
+                 value="{{ user.profile.matric_number }}" placeholder="e.g. CSC/2021/001" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="ti ti-device-floppy"></i> Save Changes
+        </button>
+      </form>
+    </div>
+
+    <!-- Appearance panel -->
+    <div class="card settings-panel" id="panel-appearance" style="padding:24px;display:none;">
+      <h3 style="font-size:var(--text-lg);margin-bottom:20px;">Appearance</h3>
+
+      <div class="settings-section">
+        <div class="settings-section-head">Theme</div>
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <h4>Color Mode</h4>
+            <p>Choose between light and dark interface</p>
+          </div>
+          <div class="theme-cards">
+            <button class="theme-card" id="theme-light" onclick="setTheme('light')">
+              <i class="ti ti-sun"></i> Light
+            </button>
+            <button class="theme-card" id="theme-dark" onclick="setTheme('dark')">
+              <i class="ti ti-moon"></i> Dark
+            </button>
+            <button class="theme-card" id="theme-warm" onclick="setTheme('warm')">
+              <i class="ti ti-coffee"></i> Warm
+            </button>
+          </div>
+
+          <div class="settings-section-head" style="margin-top:20px;">Accent Color</div>
+          <div class="theme-cards" style="margin-top:8px;">
+            <button class="theme-card" id="accent-ocean" onclick="setAccent('ocean','#2563eb','#1d4ed8','rgba(37,99,235,0.10)')">
+              <i class="ti ti-droplet" style="color:#2563eb;"></i> Ocean Blue
+            </button>
+            <button class="theme-card" id="accent-forest" onclick="setAccent('forest','#16a34a','#15803d','rgba(22,163,74,0.10)')">
+              <i class="ti ti-trees" style="color:#16a34a;"></i> Forest Green
+            </button>
+            <button class="theme-card" id="accent-cyber" onclick="setAccent('cyber','#7c3aed','#6d28d9','rgba(124,58,237,0.10)')">
+              <i class="ti ti-bolt" style="color:#7c3aed;"></i> Cyberpunk Purple
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-head">Preferences</div>
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <h4>Font Size</h4>
+            <p>Adjust the reading font size</p>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="setFontSize(14)">Small</button>
+            <button class="btn btn-ghost btn-sm" onclick="setFontSize(16)">Medium</button>
+            <button class="btn btn-ghost btn-sm" onclick="setFontSize(18)">Large</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security panel -->
+    <div class="card settings-panel" id="panel-security" style="padding:24px;display:none;">
+      <h3 style="font-size:var(--text-lg);margin-bottom:20px;">Security</h3>
+
+      <div class="settings-section">
+        <div class="settings-section-head">Password</div>
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <h4>Change Password</h4>
+            <p>Update your account password</p>
+          </div>
+          <a href="{% url 'password_reset' %}" class="btn btn-secondary btn-sm">
+            <i class="ti ti-lock"></i> Reset via Email
+          </a>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-head">Account Info</div>
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <h4>Account Created</h4>
+            <p>{{ user.date_joined|date:"F j, Y" }}</p>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <h4>Last Login</h4>
+            <p>{{ user.last_login|date:"F j, Y — g:i A"|default:"Never" }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-head" style="color:var(--danger);">Danger Zone</div>
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <h4>Log Out Everywhere</h4>
+            <p>Sign out from all active sessions</p>
+          </div>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">
+              <i class="ti ti-logout"></i> Sign Out
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function switchTab(name, btn){
+  document.querySelectorAll('.settings-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.settings-panel').forEach(function(p){ p.style.display = 'none'; p.classList.remove('active'); });
+  btn.classList.add('active');
+  var panel = document.getElementById('panel-' + name);
+  if (panel){ panel.style.display = 'block'; panel.classList.add('active'); }
+}
+
+function applyWarm(el) {
+  el = el || document.documentElement;
+  el.style.setProperty('--primary',       '#704214');
+  el.style.setProperty('--primary-hover', '#5a3410');
+  el.style.setProperty('--primary-light', 'rgba(112,66,20,0.10)');
+  el.style.setProperty('--primary-ring',  'rgba(112,66,20,0.25)');
+  el.style.setProperty('--border',        '#c8a882');
+  el.style.setProperty('--border-2',      '#b08050');
+  el.style.setProperty('--surface',       '#fdf6ee');
+  el.style.setProperty('--surface-2',     '#f5e9d8');
+  el.style.setProperty('--surface-3',     '#ecdcc8');
+  el.style.setProperty('--bg',            '#fdf6ee');
+}
+
+function clearWarm(el) {
+  el = el || document.documentElement;
+  var props = ['--primary','--primary-hover','--primary-light','--primary-ring',
+               '--border','--border-2','--surface','--surface-2','--surface-3','--bg'];
+  props.forEach(function(p){ el.style.removeProperty(p); });
+  el.style.filter = '';
+}
+
+function setTheme(mode){
+  document.querySelectorAll('#theme-light,#theme-dark,#theme-warm').forEach(function(c){ c.classList.remove('selected'); });
+  var btn = document.getElementById('theme-' + mode);
+  if (btn) btn.classList.add('selected');
+  var html = document.documentElement;
+  html.classList.add('transitioning');
+  if (mode === 'dark') {
+    html.classList.add('dark');
+    clearWarm(html);
+    localStorage.setItem('theme','dark');
+  } else if (mode === 'warm') {
+    html.classList.remove('dark');
+    html.style.filter = '';
+    applyWarm(html);
+    localStorage.setItem('theme','warm');
+  } else {
+    html.classList.remove('dark');
+    clearWarm(html);
+    localStorage.setItem('theme','light');
+  }
+  setTimeout(function(){ html.classList.remove('transitioning'); }, 420);
+}
+
+function setAccent(name, primary, hover, light){
+  document.querySelectorAll('[id^="accent-"]').forEach(function(c){ c.classList.remove('selected'); });
+  var btn = document.getElementById('accent-' + name);
+  if (btn) btn.classList.add('selected');
+  var root = document.documentElement;
+  root.style.setProperty('--primary', primary);
+  root.style.setProperty('--primary-hover', hover);
+  root.style.setProperty('--primary-light', light);
+  root.style.setProperty('--primary-ring', light.replace('0.10','0.25'));
+  localStorage.setItem('accent', JSON.stringify({name:name,primary:primary,hover:hover,light:light}));
+}
+
+// Restore saved theme & accent on load
+(function(){
+  var t = localStorage.getItem('theme') || 'light';
+  var el = document.getElementById('theme-' + t);
+  if (el) el.classList.add('selected');
+  if (t === 'warm') applyWarm();
+  var a = localStorage.getItem('accent');
+  if (a) {
+    try {
+      var ac = JSON.parse(a);
+      setAccent(ac.name, ac.primary, ac.hover, ac.light);
+    } catch(e){}
+  } else {
+    var ocean = document.getElementById('accent-ocean');
+    if (ocean) ocean.classList.add('selected');
+  }
+  var fs = localStorage.getItem('font-size');
+  if (fs) document.documentElement.style.fontSize = fs + 'px';
+})();
+
+function setFontSize(px){
+  document.documentElement.style.fontSize = px + 'px';
+  localStorage.setItem('font-size', px);
+}
+</script>
+{% endblock %}
+

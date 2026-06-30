@@ -1,106 +1,189 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
 {% block title %}{{ quiz.title }} — mayor4code{% endblock %}
+{% block page_title %}{{ quiz.title }}{% endblock %}
+
 {% block content %}
-<div style="max-width:720px;margin:0 auto;">
-  <div class="card quiz-card">
-    <p class="badge">Quiz &mdash; Lesson {{ lesson.order }}</p>
-    <h1>{{ quiz.title }}</h1>
-    <p class="quiz-meta">
-      Pass mark: <strong>{{ quiz.pass_mark }}%</strong> &nbsp;&bull;&nbsp;
-      {{ questions|length }} question{{ questions|length|pluralize }}
+<div class="quiz-wrap">
+
+  {% if results %}
+  <!-- ═══════════ RESULTS SCREEN ═══════════ -->
+  <div class="quiz-result-card">
+    <div class="result-score {% if results.completed %}pass{% else %}fail{% endif %}">
+      {{ results.percent }}%
+    </div>
+    <div class="result-badge {% if results.completed %}pass{% else %}fail{% endif %}">
+      {% if results.completed %}
+        <i class="ti ti-circle-check"></i> Passed!
+      {% else %}
+        <i class="ti ti-circle-x"></i> Not quite — try again
+      {% endif %}
+    </div>
+
+    <p style="color:var(--muted);font-size:var(--text-sm);">
+      {% if results.completed %}
+        Excellent work! You scored {{ results.percent }}% — you need {{ results.pass_mark }}% to pass.
+      {% else %}
+        You need {{ results.pass_mark }}% to pass. You scored {{ results.percent }}%. Review and try again!
+      {% endif %}
     </p>
 
-    {% if results %}
-      <div class="card" style="padding:16px 20px;margin-bottom:20px;border-color:{% if results.completed %}var(--success){% else %}var(--danger){% endif %};background:{% if results.completed %}var(--success-light){% else %}var(--danger-light){% endif %};">
-        <p style="margin:0 0 4px;font-weight:700;font-size:1.1rem;color:{% if results.completed %}var(--success){% else %}var(--danger){% endif %};">
-          {% if results.completed %}&#9989; Passed{% else %}&#10060; Not Passed{% endif %}
-          &mdash; {{ results.percent }}% ({{ results.score_count }}/{{ results.total }})
-        </p>
-        <p style="margin:0;font-size:.88rem;color:var(--muted);">
-          {% if results.completed %}Great job! You passed with {{ results.percent }}%.{% else %}You need at least {{ results.pass_mark }}%. Try again!{% endif %}
-        </p>
+    <div class="result-stats">
+      <div>
+        <div class="result-stat-val">{{ results.score_count }}</div>
+        <div class="result-stat-lbl">Correct</div>
       </div>
-
-      {% for r in results.questions %}
-        <div class="question-block" style="border-color:{% if r.is_correct %}var(--success){% else %}var(--danger){% endif %};{% if r.is_correct %}background:var(--success-light);{% endif %}">
-          <h3>Q{{ forloop.counter }}. {{ r.question.text }}</h3>
-          {% with options='ABCD' %}
-          {% for letter in options %}
-            {% with val=letter %}
-              {% if val == r.correct %}
-                <label style="background:rgba(16,185,129,.1);border-radius:10px;padding:8px 10px;margin:6px 0;">
-                  <input type="radio" disabled {% if val == r.selected %}checked{% endif %}>
-                  <span>{{ val }}. 
-                    {% if val == 'A' %}{{ r.question.option_a }}
-                    {% elif val == 'B' %}{{ r.question.option_b }}
-                    {% elif val == 'C' %}{{ r.question.option_c }}
-                    {% elif val == 'D' %}{{ r.question.option_d }}
-                    {% endif %}
-                    &#9989;
-                  </span>
-                </label>
-              {% elif val == r.selected and val != r.correct %}
-                <label style="background:rgba(239,68,68,.1);border-radius:10px;padding:8px 10px;margin:6px 0;">
-                  <input type="radio" disabled checked>
-                  <span>{{ val }}. 
-                    {% if val == 'A' %}{{ r.question.option_a }}
-                    {% elif val == 'B' %}{{ r.question.option_b }}
-                    {% elif val == 'C' %}{{ r.question.option_c }}
-                    {% elif val == 'D' %}{{ r.question.option_d }}
-                    {% endif %}
-                    &#10060;
-                  </span>
-                </label>
-              {% else %}
-                <label style="display:flex;align-items:flex-start;gap:10px;margin:6px 0;padding:8px 10px;border-radius:10px;opacity:.6;">
-                  <input type="radio" disabled>
-                  <span>{{ val }}. 
-                    {% if val == 'A' %}{{ r.question.option_a }}
-                    {% elif val == 'B' %}{{ r.question.option_b }}
-                    {% elif val == 'C' %}{{ r.question.option_c }}
-                    {% elif val == 'D' %}{{ r.question.option_d }}
-                    {% endif %}
-                  </span>
-                </label>
-              {% endif %}
-            {% endwith %}
-          {% endfor %}
-          {% endwith %}
-        </div>
-      {% endfor %}
-
-      <div class="actions" style="margin-top:8px;">
-        {% if results.completed %}
-          <a class="btn btn-primary" href="{% url 'lesson_detail' lesson.slug %}">&larr; Back to Lesson</a>
-        {% else %}
-          <a class="btn btn-primary" href="{% url 'take_quiz' lesson.slug %}">&#9997; Try Again</a>
-          <a class="btn btn-secondary" href="{% url 'lesson_detail' lesson.slug %}">&larr; Back to Lesson</a>
-        {% endif %}
+      <div>
+        <div class="result-stat-val">{{ results.total }}</div>
+        <div class="result-stat-lbl">Questions</div>
       </div>
+      <div>
+        <div class="result-stat-val">{{ results.percent }}%</div>
+        <div class="result-stat-lbl">Score</div>
+      </div>
+    </div>
 
-    {% else %}
-      <form method="post">
-        {% csrf_token %}
-        {% for question in questions %}
-          <div class="question-block">
-            <h3>Q{{ forloop.counter }}. {{ question.text }}</h3>
-            <label><input type="radio" name="question_{{ question.id }}" value="A" required><span>A. {{ question.option_a }}</span></label>
-            <label><input type="radio" name="question_{{ question.id }}" value="B"><span>B. {{ question.option_b }}</span></label>
-            <label><input type="radio" name="question_{{ question.id }}" value="C"><span>C. {{ question.option_c }}</span></label>
-            <label><input type="radio" name="question_{{ question.id }}" value="D"><span>D. {{ question.option_d }}</span></label>
-          </div>
-        {% empty %}
-          <p class="muted">No questions available yet.</p>
-        {% endfor %}
-
-        {% if questions %}
-          <div class="actions" style="margin-top:8px;">
-            <button class="btn btn-primary" type="submit"><span class="btn-text">Submit Quiz</span></button>
-            <a class="btn btn-secondary" href="{% url 'lesson_detail' lesson.slug %}">&larr; Back to Lesson</a>
-          </div>
-        {% endif %}
-      </form>
-    {% endif %}
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+      {% if results.completed %}
+        <a href="{% url 'lesson_list' %}" class="btn btn-primary btn-lg">
+          <i class="ti ti-books"></i> Next Lesson
+        </a>
+      {% else %}
+        <a href="{% url 'take_quiz' lesson.slug %}" class="btn btn-primary btn-lg">
+          <i class="ti ti-refresh"></i> Retry Quiz
+        </a>
+      {% endif %}
+      <a href="{% url 'lesson_detail' lesson.slug %}" class="btn btn-secondary btn-lg">
+        <i class="ti ti-books"></i> Review Lesson
+      </a>
+    </div>
   </div>
+
+  <!-- Answer review -->
+  <h3 style="font-size:var(--text-lg);margin-bottom:16px;">Answer Review</h3>
+  {% for item in results.questions %}
+  <div class="review-block {% if item.is_correct %}correct{% else %}wrong{% endif %}">
+    <div class="review-q">Q{{ forloop.counter }}. {{ item.question.text }}</div>
+    {% with q=item.question sel=item.selected cor=item.question.correct_option %}
+    <div class="review-option {% if cor == 'a' %}correct-ans{% elif sel == 'a' and cor != 'a' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'a' %}circle-check{% elif sel == 'a' and cor != 'a' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>A.</strong> {{ q.option_a }}{% if cor == 'a' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    </div>
+    <div class="review-option {% if cor == 'b' %}correct-ans{% elif sel == 'b' and cor != 'b' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'b' %}circle-check{% elif sel == 'b' and cor != 'b' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>B.</strong> {{ q.option_b }}{% if cor == 'b' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    </div>
+    <div class="review-option {% if cor == 'c' %}correct-ans{% elif sel == 'c' and cor != 'c' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'c' %}circle-check{% elif sel == 'c' and cor != 'c' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>C.</strong> {{ q.option_c }}{% if cor == 'c' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    </div>
+    <div class="review-option {% if cor == 'd' %}correct-ans{% elif sel == 'd' and cor != 'd' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'd' %}circle-check{% elif sel == 'd' and cor != 'd' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>D.</strong> {{ q.option_d }}{% if cor == 'd' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    </div>
+    {% endwith %}
+  </div>
+  {% endfor %}
+
+  {% else %}
+  <!-- ═══════════ QUIZ FORM ═══════════ -->
+  <div class="quiz-header">
+    <div class="quiz-progress-label">
+      <span>Question <span id="q-current">1</span> of {{ questions|length }}</span>
+      <span><span id="q-answered">0</span> answered</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="quiz-bar" style="width:0%;transition:width 0.4s var(--ease);"></div>
+    </div>
+  </div>
+
+  <form method="post" id="quiz-form">
+    {% csrf_token %}
+
+    {% for q in questions %}
+    <div class="question-card {% if forloop.first %}active{% endif %}" id="q-{{ forloop.counter }}" data-index="{{ forloop.counter }}">
+      <div class="question-text">{{ q.text }}</div>
+      <div class="option-list">
+        <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
+          <input type="radio" name="question_{{ q.id }}" value="a" />
+          <div class="option-bubble">A</div>
+          <span>{{ q.option_a }}</span>
+        </label>
+        <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
+          <input type="radio" name="question_{{ q.id }}" value="b" />
+          <div class="option-bubble">B</div>
+          <span>{{ q.option_b }}</span>
+        </label>
+        <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
+          <input type="radio" name="question_{{ q.id }}" value="c" />
+          <div class="option-bubble">C</div>
+          <span>{{ q.option_c }}</span>
+        </label>
+        <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
+          <input type="radio" name="question_{{ q.id }}" value="d" />
+          <div class="option-bubble">D</div>
+          <span>{{ q.option_d }}</span>
+        </label>
+      </div>
+
+      <!-- Navigation -->
+      <div style="display:flex;justify-content:space-between;margin-top:24px;gap:12px;">
+        {% if not forloop.first %}
+        <button type="button" class="btn btn-secondary" onclick="gotoQ({{ forloop.counter|add:'-1' }})">
+          <i class="ti ti-arrow-left"></i> Previous
+        </button>
+        {% else %}<span></span>{% endif %}
+
+        {% if not forloop.last %}
+        <button type="button" class="btn btn-primary" onclick="gotoQ({{ forloop.counter|add:'1' }})">
+          Next <i class="ti ti-arrow-right"></i>
+        </button>
+        {% else %}
+        <button type="submit" class="btn btn-success btn-lg">
+          <i class="ti ti-send"></i> Submit Quiz
+        </button>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </form>
+
+  {% endif %}
 </div>
 {% endblock %}
+
+{% block extra_js %}
+{% if not results %}
+<script>
+var total = {{ questions|length }};
+var answered = {};
+
+function gotoQ(n){
+  document.querySelectorAll('.question-card').forEach(function(c){ c.classList.remove('active'); });
+  var next = document.getElementById('q-' + n);
+  if (next) next.classList.add('active');
+  document.getElementById('q-current').textContent = n;
+}
+
+function markOpt(label, qid){
+  var card = label.closest('.question-card');
+  card.querySelectorAll('.option-label').forEach(function(l){ l.classList.remove('selected'); });
+  label.classList.add('selected');
+  if (!answered[qid]) {
+    answered[qid] = true;
+    var count = Object.keys(answered).length;
+    document.getElementById('q-answered').textContent = count;
+    document.getElementById('quiz-bar').style.width = (count / total * 100) + '%';
+  }
+}
+
+document.getElementById('quiz-form').addEventListener('submit', function(e){
+  if (Object.keys(answered).length < total){
+    if (!confirm('You have ' + (total - Object.keys(answered).length) + ' unanswered question(s). Submit anyway?')){
+      e.preventDefault();
+    }
+  }
+});
+</script>
+{% endif %}
+{% endblock %}
+

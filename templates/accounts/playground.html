@@ -1,0 +1,173 @@
+{% extends 'base_auth.html' %}
+{% load static %}
+{% block title %}Playground — mayor4code{% endblock %}
+{% block page_title %}Python Playground{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+  <div>
+    <p style="color:var(--muted);font-size:var(--text-sm);margin:0;">Write and run Python 3 code right here. Outputs appear instantly.</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <span style="font-size:var(--text-xs);color:var(--muted);">Examples:</span>
+    <div class="pg-examples">
+      <button class="btn btn-ghost btn-sm" onclick="loadExample('hello')">Hello World</button>
+      <button class="btn btn-ghost btn-sm" onclick="loadExample('fib')">Fibonacci</button>
+      <button class="btn btn-ghost btn-sm" onclick="loadExample('list')">List ops</button>
+      <button class="btn btn-ghost btn-sm" onclick="loadExample('func')">Functions</button>
+    </div>
+  </div>
+</div>
+
+<div class="playground-shell">
+
+  <!-- Editor -->
+  <div class="playground-editor-col">
+    <div class="playground-toolbar">
+      <div class="playground-dots">
+        <span class="pg-dot red"></span>
+        <span class="pg-dot yellow"></span>
+        <span class="pg-dot green"></span>
+      </div>
+      <span class="playground-filename">main.py</span>
+    </div>
+    <textarea
+      class="playground-editor"
+      id="code-editor"
+      placeholder="# Write your Python code here..."
+      spellcheck="false"
+    >print("Hello, Python!")
+print("Welcome to mayor4code Playground 🐍")</textarea>
+    <div class="playground-actions">
+      <button class="btn btn-primary" id="run-btn" onclick="runCode()">
+        <i class="ti ti-player-play"></i> Run
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="clearEditor()">
+        <i class="ti ti-trash"></i> Clear
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="copyCode()">
+        <i class="ti ti-copy"></i> Copy
+      </button>
+      <span style="margin-left:auto;font-size:var(--text-xs);color:var(--muted);" id="char-count">0 / 10,000</span>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="playground-output-col">
+    <div class="playground-output-header">
+      <span class="playground-output-title">Output</span>
+      <span class="playground-output-status idle" id="output-status">Idle</span>
+    </div>
+    <div class="playground-output-body" id="output-body">
+      <span style="color:rgba(255,255,255,0.25);"># Press Run to execute your code</span>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+var editor = document.getElementById('code-editor');
+var outputBody = document.getElementById('output-body');
+var outputStatus = document.getElementById('output-status');
+var charCount = document.getElementById('char-count');
+var runBtn = document.getElementById('run-btn');
+
+editor.addEventListener('input', updateCount);
+updateCount();
+
+function updateCount(){
+  charCount.textContent = editor.value.length + ' / 10,000';
+}
+
+editor.addEventListener('keydown', function(e){
+  if (e.key === 'Tab'){
+    e.preventDefault();
+    var start = editor.selectionStart;
+    var end = editor.selectionEnd;
+    editor.value = editor.value.substring(0, start) + '    ' + editor.value.substring(end);
+    editor.selectionStart = editor.selectionEnd = start + 4;
+    updateCount();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); runCode(); }
+});
+
+function setStatus(text, cls){
+  outputStatus.textContent = text;
+  outputStatus.className = 'playground-output-status ' + cls;
+}
+
+function runCode(){
+  var code = editor.value.trim();
+  if (!code){ showOutput('# No code to run.', false); return; }
+  if (code.length > 10000){ showOutput('Error: Code exceeds 10,000 characters.', true); return; }
+
+  setStatus('Running…', 'running');
+  runBtn.disabled = true;
+  runBtn.innerHTML = '<i class="ti ti-loader" style="animation:spin 1s linear infinite;"></i> Running';
+
+  fetch("{% url 'execute_python' %}", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify({code: code})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var isErr = !!data.error;
+    showOutput(data.output || data.error || '(no output)', isErr);
+    setStatus(isErr ? 'Error' : 'Done', isErr ? 'err' : 'ok');
+  })
+  .catch(function(){
+    showOutput('Network error — could not reach the server.', true);
+    setStatus('Error', 'err');
+  })
+  .finally(function(){
+    runBtn.disabled = false;
+    runBtn.innerHTML = '<i class="ti ti-player-play"></i> Run';
+  });
+}
+
+function showOutput(text, isErr){
+  outputBody.textContent = text;
+  outputBody.className = 'playground-output-body' + (isErr ? ' has-error' : '');
+}
+
+function clearEditor(){
+  editor.value = '';
+  outputBody.innerHTML = '<span style="color:rgba(255,255,255,0.25);"># Cleared — write some code!</span>';
+  outputBody.className = 'playground-output-body';
+  setStatus('Idle', 'idle');
+  updateCount();
+  editor.focus();
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(editor.value).then(function(){
+    showToast('Code copied!', 'success');
+  }).catch(function(){ showToast('Copy failed', 'error'); });
+}
+
+var EXAMPLES = {
+  hello: '# Classic Hello World\nprint("Hello, World!")\nprint("Learning Python with mayor4code 🐍")',
+  fib: '# Fibonacci sequence\ndef fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        print(a, end=" ")\n        a, b = b, a + b\n\nfibonacci(10)',
+  list: '# List operations\nfruits = ["apple", "banana", "cherry", "date"]\nprint("All fruits:", fruits)\nprint("Sorted:", sorted(fruits))\nprint("First:", fruits[0])\nprint("Sliced:", fruits[1:3])\nfruits.append("elderberry")\nprint("After append:", fruits)',
+  func: '# Functions\ndef greet(name, greeting="Hello"):\n    return f"{greeting}, {name}!"\n\ndef square(n):\n    return n ** 2\n\nprint(greet("Alex"))\nprint(greet("Sam", "Hi"))\nfor i in range(1, 6):\n    print(f"{i} squared = {square(i)}")'
+};
+
+function loadExample(key){
+  editor.value = EXAMPLES[key] || '';
+  outputBody.innerHTML = '<span style="color:rgba(255,255,255,0.25);"># Press Run to execute</span>';
+  outputBody.className = 'playground-output-body';
+  setStatus('Idle', 'idle');
+  updateCount();
+  editor.focus();
+}
+</script>
+{% endblock %}
+

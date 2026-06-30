@@ -11,3 +11,85 @@
     </div>
     <div class="code-runner-output">Click "Run Code" to execute Python in your browser.</div>
 </div>
+
+<script>
+(function() {
+    const runner = document.currentScript ? document.currentScript.parentElement : document.querySelector('.code-runner');
+    if (!runner) return;
+    
+    const textarea = runner.querySelector('.code-runner-textarea');
+    const btn = runner.querySelector('.code-runner-btn');
+    const output = runner.querySelector('.code-runner-output');
+    const status = runner.querySelector('.code-runner-status');
+    
+    if (!textarea || !btn || !output) return;
+    
+    function runCode() {
+        const code = textarea.value.trim();
+        if (!code) {
+            output.textContent = 'Please enter some code first.';
+            output.style.color = 'var(--muted)';
+            return;
+        }
+        
+        if (code.length > 10000) {
+            output.textContent = 'Code exceeds 10,000 character limit.';
+            output.style.color = 'var(--danger)';
+            return;
+        }
+        
+        const dangerous = ['os', 'sys', 'subprocess', 'shutil', 'import ', 'exec(', 'eval(', '__import__', 'open('];
+        const hasDangerous = dangerous.some(d => code.toLowerCase().includes(d.toLowerCase()));
+        
+        if (hasDangerous) {
+            output.textContent = 'Security error: Dangerous imports or functions are not allowed.';
+            output.style.color = 'var(--danger)';
+            return;
+        }
+        
+        status.textContent = 'Running...';
+        btn.disabled = true;
+        output.style.color = 'var(--muted)';
+        output.textContent = 'Executing...';
+        
+        fetch('{% url "run_code" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+            },
+            body: 'code=' + encodeURIComponent(code)
+        })
+        .then(response => response.json())
+        .then(data => {
+            status.textContent = '';
+            btn.disabled = false;
+            if (data.output) {
+                output.textContent = data.output;
+                output.style.color = 'var(--success)';
+            } else if (data.error) {
+                output.textContent = 'Error: ' + data.error;
+                output.style.color = 'var(--danger)';
+            } else {
+                output.textContent = 'No output';
+                output.style.color = 'var(--muted)';
+            }
+        })
+        .catch(err => {
+            status.textContent = '';
+            btn.disabled = false;
+            output.textContent = 'Error: ' + err.message;
+            output.style.color = 'var(--danger)';
+        });
+    }
+    
+    btn.addEventListener('click', runCode);
+    
+    textarea.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            runCode();
+        }
+    });
+})();
+</script>

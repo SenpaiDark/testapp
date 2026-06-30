@@ -1,87 +1,190 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
+{% load static %}
 {% block title %}Dashboard — mayor4code{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
 {% block content %}
-<section class="section-head">
-  <p class="badge">Dashboard</p>
-  <h1>Welcome back, {{ request.user.username }}</h1>
-  <p class="muted">Track your Python learning progress below.</p>
-</section>
 
-<div class="dashboard-stats">
-  <div class="card stat-card">
-    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-    </svg>
-    <span class="stat-card-value">{{ progress_pct }}%</span>
-    <span class="stat-card-label">Overall Progress</span>
-  </div>
-  <div class="card stat-card">
-    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="9 11 12 14 22 4"/>
-      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-    </svg>
-    <span class="stat-card-value">{{ completed_count }} / {{ total_count }}</span>
-    <span class="stat-card-label">Lessons Completed</span>
-  </div>
-  <div class="card stat-card">
-    <svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <rect x="3" y="11" width="18" height="11" rx="2"/>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-    </svg>
-    <span class="stat-card-value">{{ completed_count }}</span>
-    <span class="stat-card-label">Unlocked Lessons</span>
-  </div>
-</div>
-
-<div class="progress-banner">
-  <span class="progress-label">Progress</span>
-  <div class="progress-bar-wrap">
-    <div class="progress-bar-fill" style="width:{{ progress_pct }}%"></div>
-  </div>
-  <span class="progress-count">{{ completed_count }} / {{ total_count }} completed</span>
-</div>
-
-<div class="grid grid-2">
-  {% for row in lesson_rows %}
-  <div class="card lesson-card">
-    <div class="card-top">
-      <h3>{{ row.lesson.order }}. {{ row.lesson.title }}</h3>
-      {% if row.progress.is_completed %}
-        <span class="status status-done">Completed</span>
-      {% elif row.unlocked %}
-        <span class="status status-unlocked">Unlocked</span>
-      {% else %}
-        <span class="status status-locked">Locked</span>
-      {% endif %}
-    </div>
-
-    <p class="muted text-sm">{{ row.lesson.summary|default:"No summary added yet." }}</p>
-
-    {% if row.progress %}
-      <p class="score-line">Score: <strong>{{ row.progress.score }}%</strong> &mdash; {% if row.progress.is_completed %}Passed{% else %}Not passed yet{% endif %}</p>
-    {% else %}
-      <p class="score-line">Not attempted yet</p>
-    {% endif %}
-
-    {% if row.unlocked %}
-      <a class="btn btn-primary" href="{% url 'lesson_detail' row.lesson.slug %}">
-        {% if row.progress.is_completed %}Review Lesson{% else %}Open Lesson{% endif %}
-      </a>
-    {% else %}
-      <button class="btn btn-disabled" disabled>Complete previous lesson first</button>
-    {% endif %}
-  </div>
-  {% empty %}
-  <div class="card lesson-card">
-    <div class="empty-state">
-      <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
-      <h3>No lessons yet</h3>
-      <p>Lessons will appear here once they are added.</p>
+{% if all_done %}
+<div class="all-done-banner">
+  <div class="all-done-icon">🎉</div>
+  <div class="all-done-text">
+    <h3>You completed the entire course!</h3>
+    <p>You've passed all 5 lessons with an average score of {{ avg_score|floatformat:0 }}%. Your certificate is ready.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="{% url 'my_certificate' %}" class="btn btn-primary"><i class="ti ti-certificate"></i> View Certificate</a>
+      <a href="{% url 'all_done' %}" class="btn btn-secondary"><i class="ti ti-confetti"></i> Celebrate</a>
     </div>
   </div>
-  {% endfor %}
 </div>
+{% endif %}
+
+<!-- Welcome banner -->
+<div class="welcome-banner">
+  <div class="welcome-banner-text">
+    <h2>Welcome back, {{ user.username }} 👋</h2>
+    <p>You've completed {{ completed_count }} of {{ total_count }} lessons. Keep going!</p>
+  </div>
+  <a href="{% url 'lesson_list' %}" class="btn">
+    <i class="ti ti-books"></i> Continue Learning
+  </a>
+</div>
+
+<!-- Did you know? tip carousel -->
+<div class="tip-card" style="margin-bottom:16px;">
+  <div class="tip-card-label"><i class="ti ti-bulb"></i> Did you know?</div>
+  <p id="tip-text" style="transition:opacity 0.5s ease;"></p>
+</div>
+
+<!-- Stat cards -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon blue"><i class="ti ti-books"></i></div>
+    <div class="stat-value">{{ completed_count }}/{{ total_count }}</div>
+    <div class="stat-label">Lessons Done</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="ti ti-chart-bar"></i></div>
+    <div class="stat-value">{{ avg_score|floatformat:0|default:"—" }}{% if avg_score %}<span style="font-size:1.2rem;color:var(--muted);">%</span>{% endif %}</div>
+    <div class="stat-label">Avg Quiz Score</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon amber"><i class="ti ti-flame"></i></div>
+    <div class="stat-value">{{ progress_pct|floatformat:0 }}<span style="font-size:1.2rem;color:var(--muted);">%</span></div>
+    <div class="stat-label">Course Progress</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon purple"><i class="ti ti-trophy"></i></div>
+    <div class="stat-value">{% if all_done %}🏆{% else %}—{% endif %}</div>
+    <div class="stat-label">Certificate</div>
+  </div>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-row">
+  <span class="progress-row-label">Course Progress</span>
+  <div class="progress-track" style="flex:1;">
+    <div class="progress-fill" style="width:{{ progress_pct }}%;"></div>
+  </div>
+  <span class="progress-row-count">{{ completed_count }} / {{ total_count }}</span>
+</div>
+
+<!-- Two-col: lessons + sidebar -->
+<div class="dash-grid">
+
+  <!-- Lesson cards -->
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h2 style="font-size:var(--text-lg);margin:0;">Your Lessons</h2>
+      <a href="{% url 'lesson_list' %}" class="btn btn-ghost btn-sm">View all <i class="ti ti-arrow-right"></i></a>
+    </div>
+    <div class="lesson-cards">
+      {% for row in lesson_rows %}
+      <{% if row.unlocked %}a href="{% url 'lesson_detail' row.lesson.slug %}"{% else %}div{% endif %}
+         class="lesson-card {% if not row.unlocked %}locked{% endif %}"
+         {% if row.unlocked %}title="{{ row.lesson.title }}"{% endif %}>
+        <div class="lc-top">
+          <div class="lesson-num {% if row.progress.is_completed %}done{% elif row.unlocked %}default{% else %}locked{% endif %}">
+            {% if row.progress.is_completed %}<i class="ti ti-check" style="font-size:0.75rem;"></i>
+            {% elif not row.unlocked %}<i class="ti ti-lock" style="font-size:0.75rem;"></i>
+            {% else %}{{ forloop.counter }}{% endif %}
+          </div>
+          {% if row.progress.is_completed %}
+            <span class="badge badge-green"><i class="ti ti-check"></i> Passed</span>
+          {% elif row.unlocked %}
+            <span class="badge badge-blue">Open</span>
+          {% else %}
+            <span class="badge badge-muted"><i class="ti ti-lock"></i> Locked</span>
+          {% endif %}
+        </div>
+        <h4>{{ row.lesson.title }}</h4>
+        {% if row.progress.is_completed and row.progress %}
+          <span class="score-line"><i class="ti ti-star" style="color:var(--gold);"></i> Score: {{ row.progress.score|floatformat:0 }}%</span>
+        {% endif %}
+      </{% if row.unlocked %}a{% else %}div{% endif %}>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <!-- Roadmap -->
+    <div class="card" style="padding:20px;">
+      <h3 style="font-size:var(--text-base);margin-bottom:16px;">Roadmap</h3>
+      <div class="roadmap">
+        {% for row in lesson_rows %}
+        <div class="roadmap-item {% if not row.unlocked %}locked{% endif %}">
+          <div class="roadmap-dot {% if row.progress.is_completed %}done{% elif row.unlocked %}current{% else %}locked{% endif %}">
+            {% if row.progress.is_completed %}<i class="ti ti-check" style="font-size:0.7rem;"></i>
+            {% elif row.unlocked %}<i class="ti ti-code" style="font-size:0.7rem;"></i>
+            {% else %}<i class="ti ti-lock" style="font-size:0.7rem;"></i>{% endif %}
+          </div>
+          <div class="roadmap-info">
+            <div class="roadmap-title">{{ row.lesson.title }}</div>
+            <div class="roadmap-sub">
+              {% if row.progress.is_completed %}Passed — {{ row.progress.score|floatformat:0 }}%
+              {% elif row.unlocked %}In progress
+              {% else %}Locked{% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="card" style="padding:20px;">
+      <h3 style="font-size:var(--text-base);margin-bottom:12px;">Quick Actions</h3>
+      <div class="quick-actions">
+        <a href="{% url 'lesson_list' %}" class="btn btn-primary btn-block">
+          <i class="ti ti-books"></i> Go to Lessons
+        </a>
+        <a href="{% url 'playground' %}" class="btn btn-secondary btn-block">
+          <i class="ti ti-terminal-2"></i> Open Playground
+        </a>
+        <a href="{% url 'leaderboard' %}" class="btn btn-ghost btn-block">
+          <i class="ti ti-trophy"></i> Leaderboard
+        </a>
+        {% if all_done %}
+        <a href="{% url 'my_certificate' %}" class="btn btn-ghost btn-block" style="color:var(--gold);">
+          <i class="ti ti-certificate"></i> My Certificate
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <script>
+    (function(){
+      var tips = [
+        'Use <code>f"Hello {name}"</code> (f-strings) for clean string formatting — faster and more readable than <code>.format()</code>.',
+        '<code>enumerate(lst)</code> gives you both index and value in a loop: <code>for i, v in enumerate(lst):</code>',
+        'Use <code>list comprehensions</code>: <code>[x*2 for x in range(10)]</code> is cleaner than a manual <code>for</code> loop with <code>.append()</code>.',
+        '<code>zip(a, b)</code> lets you iterate over two lists in parallel without needing an index.',
+        'The walrus operator <code>:=</code> lets you assign and test in one line: <code>if n := len(data):</code>',
+        'Use <code>dict.get(key, default)</code> instead of checking <code>if key in dict</code> before accessing it.',
+        '<code>*args</code> and <code>**kwargs</code> let functions accept any number of positional or keyword arguments.',
+        'Use <code>with open(...) as f:</code> — it automatically closes the file even if an error occurs.',
+        '<code>set()</code> removes duplicates instantly: <code>unique = list(set(my_list))</code>.',
+        'Python\'s <code>//</code> is floor division (integer result) and <code>%</code> is the modulus (remainder).'
+      ];
+      var idx = 0;
+      var el = document.getElementById('tip-text');
+      function show(){
+        el.style.opacity = '0';
+        setTimeout(function(){
+          el.innerHTML = tips[idx];
+          el.style.opacity = '1';
+          idx = (idx + 1) % tips.length;
+        }, 500);
+      }
+      show();
+      setInterval(show, 5000);
+    })();
+    </script>
+
+  </div>
+</div>
+
 {% endblock %}
+

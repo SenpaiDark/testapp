@@ -1,40 +1,72 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
+{% load static %}
 {% block title %}Lessons — mayor4code{% endblock %}
-{% block content %}
-<section class="section-head">
-  <p class="badge">Lessons</p>
-  <h1>Python Course Outline</h1>
-  <p class="muted">Complete each quiz to unlock the next lesson. Progress is saved automatically.</p>
-</section>
+{% block page_title %}Lessons{% endblock %}
 
-<div class="grid grid-2">
+{% block content %}
+
+<!-- Hero progress row -->
+<div class="lesson-list-hero">
+  <div style="flex:1;">
+    <h1 style="font-size:var(--text-2xl);margin-bottom:4px;">Python Course</h1>
+    <p style="color:var(--muted);font-size:var(--text-sm);margin-bottom:14px;">{{ completed_count }} of {{ total_count }} lessons completed</p>
+    <div class="progress-track progress-md">
+      <div class="progress-fill" style="width:{{ progress_pct }}%;"></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+    <div style="font-family:var(--font-head);font-size:var(--text-3xl);font-weight:var(--fw-extrabold);color:{% if progress_pct == 100 %}var(--success){% else %}var(--primary){% endif %};">{{ progress_pct|floatformat:0 }}%</div>
+    <div style="font-size:var(--text-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">Complete</div>
+  </div>
+</div>
+
+<!-- Lesson list -->
+<div class="lesson-list-cards">
   {% for row in lesson_rows %}
-  <div class="card lesson-card">
-    <div class="card-top">
-      <h3>{{ row.lesson.order }}. {{ row.lesson.title }}</h3>
+  <{% if row.unlocked %}a href="{% url 'lesson_detail' row.lesson.slug %}"{% else %}div{% endif %}
+     class="ll-card {% if not row.unlocked %}ll-locked{% endif %}">
+
+    <div class="ll-num {% if row.progress.is_completed %}done{% elif row.unlocked %}default{% else %}locked{% endif %}">
       {% if row.progress.is_completed %}
-        <span class="status status-done">&check; Done</span>
-      {% elif row.unlocked %}
-        <span class="status status-unlocked">Unlocked</span>
+        <i class="ti ti-check"></i>
+      {% elif not row.unlocked %}
+        <i class="ti ti-lock"></i>
       {% else %}
-        <span class="status status-locked">Locked</span>
+        {{ forloop.counter }}
       {% endif %}
     </div>
 
-    <p class="muted text-sm">{{ row.lesson.summary|default:"No summary added yet." }}</p>
+    <div class="ll-info">
+      <h3>{{ row.lesson.title }}</h3>
+      <p>
+        {% if row.progress.is_completed %}Completed — score: {{ row.progress.score|floatformat:0 }}%
+        {% elif row.unlocked %}Ready to study
+        {% else %}Complete lesson {{ forloop.counter|add:"-1" }} to unlock{% endif %}
+      </p>
+    </div>
 
-    {% if row.progress %}
-      <p class="score-line">Last score: <strong>{{ row.progress.score }}%</strong></p>
-    {% endif %}
+    <div class="ll-right">
+      {% if row.progress.is_completed %}
+        <span class="badge badge-green"><i class="ti ti-check"></i> Passed</span>
+        {% if row.progress %}
+          <span style="font-size:var(--text-xs);color:var(--muted);">{{ row.progress.score|floatformat:0 }}%</span>
+        {% endif %}
+      {% elif row.unlocked %}
+        <span class="badge badge-blue">Start</span>
+      {% else %}
+        <span class="badge badge-muted"><i class="ti ti-lock"></i> Locked</span>
+      {% endif %}
+    </div>
 
-    {% if row.unlocked %}
-      <a class="btn btn-primary" href="{% url 'lesson_detail' row.lesson.slug %}">
-        {% if row.progress.is_completed %}Review{% else %}Start Lesson{% endif %}
-      </a>
-    {% else %}
-      <button class="btn btn-disabled" disabled>Locked</button>
-    {% endif %}
+  </{% if row.unlocked %}a{% else %}div{% endif %}>
+  {% empty %}
+  <div class="empty-state">
+    <div class="empty-state-emoji">📚</div>
+    <h3>No lessons yet</h3>
+    <p>Lessons will appear here once they've been added.</p>
   </div>
   {% endfor %}
 </div>
+
 {% endblock %}
+

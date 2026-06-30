@@ -1,31 +1,108 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
 {% block title %}Congratulations! — mayor4code{% endblock %}
+{% block page_title %}All Done!{% endblock %}
+
 {% block content %}
-<div class="hero" style="text-align:center;padding:48px 0;">
-  <div class="card" style="padding:48px 32px;max-width:600px;margin:0 auto;">
-    <p style="font-size:4rem;margin:0 0 12px;">🎉</p>
-    <h1>Congratulations!</h1>
-    <p class="muted" style="font-size:1.1rem;margin:16px 0 24px;">
-      You've completed all {{ total_lessons }} lessons on mayor4code!
-    </p>
 
-    <div class="progress-banner" style="margin-bottom:24px;">
-      <span class="progress-label">Final Score</span>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" style="width:100%;"></div>
+<div style="max-width:640px;margin:40px auto;text-align:center;">
+
+  <!-- Trophy -->
+  <div style="font-size:6rem;margin-bottom:24px;animation:float 3s ease-in-out infinite;">🏆</div>
+
+  <div class="badge badge-green" style="font-size:var(--text-sm);padding:8px 20px;margin:0 auto 24px;display:inline-flex;">
+    <i class="ti ti-certificate"></i>
+    Course Completed
+  </div>
+
+  <h1 style="font-size:clamp(2rem,5vw,3rem);margin-bottom:16px;">
+    You did it, <span style="color:var(--primary);">{{ user.username }}</span>! 🎉
+  </h1>
+
+  <p style="font-size:var(--text-lg);color:var(--muted);line-height:1.75;margin-bottom:40px;">
+    You've successfully completed all 5 Python lessons and earned your certificate. That's a real achievement — go celebrate!
+  </p>
+
+  <!-- Stats card -->
+  <div class="card" style="padding:28px;margin-bottom:32px;">
+    <div class="result-stats">
+      <div>
+        <div class="result-stat-val" style="color:var(--success);">5/5</div>
+        <div class="result-stat-lbl">Lessons</div>
       </div>
-      <span class="progress-count">100% Complete</span>
-    </div>
-
-    {% if avg_score %}
-      <p style="margin:0 0 8px;color:var(--muted);">Average Quiz Score: <strong style="color:var(--text);">{{ avg_score }}%</strong></p>
-      <p style="margin:0 0 8px;color:var(--muted);">Total Attempts: <strong style="color:var(--text);">{{ total_attempts }}</strong></p>
-    {% endif %}
-
-    <div class="actions" style="justify-content:center;margin-top:28px;">
-      <a class="btn btn-primary" href="{% url 'dashboard' %}">Review Lessons</a>
-      <a class="btn btn-secondary" href="{% url 'leaderboard' %}">View Leaderboard</a>
+      <div>
+        <div class="result-stat-val" style="color:var(--primary);">100%</div>
+        <div class="result-stat-lbl">Complete</div>
+      </div>
+      <div>
+        <div class="result-stat-val" style="color:var(--gold);">🎓</div>
+        <div class="result-stat-lbl">Certified</div>
+      </div>
     </div>
   </div>
+
+  <!-- Actions -->
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;">
+    <a href="{% url 'my_certificate' %}" class="btn btn-primary btn-xl">
+      <i class="ti ti-certificate"></i> View My Certificate
+    </a>
+    <a href="{% url 'leaderboard' %}" class="btn btn-secondary btn-xl">
+      <i class="ti ti-trophy"></i> Leaderboard
+    </a>
+  </div>
+
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <a href="{% url 'playground' %}" class="btn btn-ghost">
+      <i class="ti ti-terminal-2"></i> Keep Coding
+    </a>
+    <a href="{% url 'dashboard' %}" class="btn btn-ghost">
+      <i class="ti ti-layout-dashboard"></i> Dashboard
+    </a>
+  </div>
+
+  <!-- Confetti note -->
+  <p style="margin-top:32px;font-size:var(--text-xs);color:var(--muted-2);">
+    Share your achievement with the world! Your certificate code is on the certificate page.
+  </p>
 </div>
+
 {% endblock %}
+
+{% block extra_js %}
+<script>
+/* Simple confetti burst */
+(function(){
+  var colors = ['#2563eb','#22c55e','#f59e0b','#ef4444','#7c3aed','#fbbf24'];
+  var container = document.body;
+  for (var i = 0; i < 80; i++) {
+    (function(i){
+      setTimeout(function(){
+        var el = document.createElement('div');
+        el.style.cssText = [
+          'position:fixed',
+          'width:' + (Math.random() * 10 + 6) + 'px',
+          'height:' + (Math.random() * 10 + 6) + 'px',
+          'background:' + colors[Math.floor(Math.random() * colors.length)],
+          'left:' + (Math.random() * 100) + 'vw',
+          'top:-20px',
+          'border-radius:' + (Math.random() > 0.5 ? '50%' : '2px'),
+          'opacity:1',
+          'pointer-events:none',
+          'z-index:9999',
+          'transition:top ' + (Math.random() * 2 + 1.5) + 's linear, opacity 0.5s ' + (Math.random() * 2 + 1) + 's'
+        ].join(';');
+        container.appendChild(el);
+        setTimeout(function(){
+          el.style.top = (Math.random() * 60 + 80) + 'vh';
+          el.style.left = (parseFloat(el.style.left) + (Math.random() * 20 - 10)) + 'vw';
+        }, 10);
+        setTimeout(function(){
+          el.style.opacity = '0';
+          setTimeout(function(){ el.remove(); }, 600);
+        }, Math.random() * 2000 + 1000);
+      }, i * 30);
+    })(i);
+  }
+})();
+</script>
+{% endblock %}
+

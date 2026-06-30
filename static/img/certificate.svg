@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 636" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8faff"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5d060"/>
+      <stop offset="40%" stop-color="#c9940a"/>
+      <stop offset="100%" stop-color="#e8b923"/>
+    </linearGradient>
+    <linearGradient id="goldLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fdf3c0"/>
+      <stop offset="100%" stop-color="#f5d060"/>
+    </linearGradient>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0d1b4b"/>
+      <stop offset="100%" stop-color="#1a3080"/>
+    </linearGradient>
+    <linearGradient id="navyWave" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#162359"/>
+      <stop offset="100%" stop-color="#0d1b4b"/>
+    </linearGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a4fa0"/>
+      <stop offset="100%" stop-color="#0d2d6b"/>
+    </linearGradient>
+    <linearGradient id="seal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4a017"/>
+      <stop offset="100%" stop-color="#8b6914"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#00000025"/>
+    </filter>
+    <filter id="medalShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#00000040"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="636" fill="url(#bg)"/>
+
+  <!-- Top navy wave -->
+  <path d="M0,0 L900,0 L900,90 Q750,140 600,100 Q450,60 300,110 Q150,155 0,110 Z" fill="url(#navy)"/>
+
+  <!-- Top gold stripe -->
+  <path d="M0,0 L900,0 L900,8 L0,8 Z" fill="url(#gold)"/>
+
+  <!-- Bottom navy wave -->
+  <path d="M0,636 L900,636 L900,530 Q720,480 540,520 Q360,560 180,510 Q90,490 0,520 Z" fill="url(#navyWave)"/>
+
+  <!-- Bottom gold stripe -->
+  <path d="M0,628 L900,628 L900,636 L0,636 Z" fill="url(#gold)"/>
+
+  <!-- Gold wave accent on bottom navy -->
+  <path d="M0,590 Q225,565 450,580 Q675,595 900,570 L900,600 Q675,625 450,610 Q225,595 0,620 Z" fill="url(#gold)" opacity="0.25"/>
+
+  <!-- Outer borders -->
+  <rect x="12" y="12" width="876" height="612" rx="6" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.6"/>
+  <rect x="18" y="18" width="864" height="600" rx="4" fill="none" stroke="url(#gold)" stroke-width="0.75" opacity="0.3"/>
+
+  <!-- Medal (top left) -->
+  <g transform="translate(68, 48)" filter="url(#medalShadow)">
+    <!-- Ribbon left -->
+    <path d="M28,52 L20,110 L40,98 L50,110 L44,52 Z" fill="url(#ribbon)"/>
+    <!-- Ribbon right -->
+    <path d="M56,52 L50,110 L60,98 L72,110 L64,52 Z" fill="url(#ribbon)"/>
+    <!-- Ribbon highlight -->
+    <path d="M28,52 L44,52 L40,98 L28,52 Z" fill="#2255bb" opacity="0.4"/>
+    <!-- Medal rings -->
+    <circle cx="46" cy="46" r="46" fill="url(#gold)"/>
+    <circle cx="46" cy="46" r="38" fill="#b8860b"/>
+    <circle cx="46" cy="46" r="34" fill="url(#goldLight)"/>
+    <circle cx="46" cy="46" r="26" fill="url(#gold)"/>
+    <!-- Medal text -->
+    <text x="46" y="32" text-anchor="middle" fill="#0d1b4b" font-size="9" font-family="Arial" font-weight="900">&#9733; &#9733; &#9733;</text>
+    <text x="46" y="48" text-anchor="middle" fill="#0d1b4b" font-size="10" font-family="Arial" font-weight="900" letter-spacing="1">COURSE</text>
+    <text x="46" y="60" text-anchor="middle" fill="#0d1b4b" font-size="7" font-family="Arial" font-weight="700" letter-spacing="0.5">Completion</text>
+    <text x="46" y="72" text-anchor="middle" fill="#0d1b4b" font-size="8" font-family="Arial">&#xB7; &#xB7; &#xB7;</text>
+  </g>
+
+  <!-- Brand name (top centre) -->
+  <text x="450" y="52" text-anchor="middle" fill="#ffffff" font-size="13" font-family="Arial" font-weight="700" letter-spacing="3" opacity="0.85">MAYOR4CODE</text>
+  <text x="450" y="72" text-anchor="middle" fill="#f5d060" font-size="10" font-family="Arial" font-weight="400" letter-spacing="2" opacity="0.9">PYTHON LEARNING PLATFORM</text>
+  <line x1="350" y1="80" x2="550" y2="80" stroke="url(#gold)" stroke-width="1" opacity="0.6"/>
+
+  <!-- QR code (top right) — 21x21 module grid, 4px per module, 4px padding -->
+  <g transform="translate(754, 18)">
+    <!-- White card background -->
+    <rect width="100" height="100" rx="5" fill="white" opacity="0.95"/>
+    <!-- Each row of dark modules: d = dark (fill), s = skip (light) -->
+    <!-- Row 0: finder TL top + timing + finder TR top -->
+    <rect x="4"  y="4"  width="28" height="4" fill="#0d1b4b"/>
+    <rect x="44" y="4"  width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="56" y="4"  width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="4"  width="28" height="4" fill="#0d1b4b"/>
+    <!-- Row 1: finder TL outer side -->
+    <rect x="4"  y="8"  width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="24" y="8"  width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="8"  width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="48" y="8"  width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="8"  width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="88" y="8"  width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Row 2: finder TL inner box -->
+    <rect x="4"  y="12" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="12" y="12" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="24" y="12" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="40" y="12" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="12" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="12" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="12" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="12" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="88" y="12" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Row 3 -->
+    <rect x="4"  y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="12" y="16" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="24" y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="44" y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="56" y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="64" y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="16" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="88" y="16" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Row 4 -->
+    <rect x="4"  y="20" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="12" y="20" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="24" y="20" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="40" y="20" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="20" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="20" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="20" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="20" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="88" y="20" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Row 5 -->
+    <rect x="4"  y="24" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="24" y="24" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="24" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="48" y="24" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="56" y="24" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="24" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="88" y="24" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Row 6: finder TL bottom -->
+    <rect x="4"  y="28" width="28" height="4" fill="#0d1b4b"/>
+    <rect x="40" y="28" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="48" y="28" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="28" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="28" width="28" height="4" fill="#0d1b4b"/>
+    <!-- Row 7: timing row -->
+    <rect x="36" y="32" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="44" y="32" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="32" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="32" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Data rows 8-13 -->
+    <rect x="4"  y="36" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="16" y="36" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="28" y="36" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="36" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="36" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="36" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="80" y="36" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="8"  y="40" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="24" y="40" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="40" y="40" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="56" y="40" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="64" y="40" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="72" y="40" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="84" y="40" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="44" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="12" y="44" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="20" y="44" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="44" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="44" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="44" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="44" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="88" y="44" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="48" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="24" y="48" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="44" y="48" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="56" y="48" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="48" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="80" y="48" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="52" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="16" y="52" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="28" y="52" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="40" y="52" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="52" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="64" y="52" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="52" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="84" y="52" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="8"  y="56" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="20" y="56" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="56" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="48" y="56" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="56" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="72" y="56" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="88" y="56" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Row timing column -->
+    <rect x="32" y="36" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="32" y="44" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="32" y="52" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Finder BL -->
+    <rect x="4"  y="60" width="28" height="4" fill="#0d1b4b"/>
+    <rect x="36" y="60" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="60" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="60" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="60" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="84" y="60" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="64" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="24" y="64" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="40" y="64" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="48" y="64" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="64" y="64" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="72" y="64" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="88" y="64" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="68" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="12" y="68" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="24" y="68" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="68" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="68" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="68" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="68" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="80" y="68" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="72" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="12" y="72" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="24" y="72" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="40" y="72" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="56" y="72" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="64" y="72" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="72" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="84" y="72" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="76" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="12" y="76" width="12" height="4" fill="#0d1b4b"/>
+    <rect x="24" y="76" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="76" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="44" y="76" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="52" y="76" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="68" y="76" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="76" y="76" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="88" y="76" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="80" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="24" y="80" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="36" y="80" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="48" y="80" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="80" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="72" y="80" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="84" y="80" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="4"  y="84" width="28" height="4" fill="#0d1b4b"/>
+    <rect x="40" y="84" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="48" y="84" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="60" y="84" width="8"  height="4" fill="#0d1b4b"/>
+    <rect x="72" y="84" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="80" y="84" width="4"  height="4" fill="#0d1b4b"/>
+    <rect x="88" y="84" width="4"  height="4" fill="#0d1b4b"/>
+    <!-- Label -->
+    <text x="50" y="97" text-anchor="middle" fill="#0d1b4b" font-size="5" font-family="Arial" font-weight="700" letter-spacing="0.5">SCAN TO VERIFY</text>
+  </g>
+
+  <!-- Main title -->
+  <text x="450" y="200" text-anchor="middle" fill="#0d1b4b" font-size="58" font-family="Georgia, serif" font-weight="700" letter-spacing="4">CERTIFICATE</text>
+  <text x="450" y="232" text-anchor="middle" fill="#c9940a" font-size="16" font-family="Arial" font-weight="700" letter-spacing="8">OF ACHIEVEMENT</text>
+
+  <!-- Title underlines -->
+  <line x1="240" y1="244" x2="660" y2="244" stroke="url(#gold)" stroke-width="2"/>
+  <line x1="300" y1="248" x2="600" y2="248" stroke="url(#gold)" stroke-width="0.75" opacity="0.5"/>
+
+  <!-- Presented to -->
+  <text x="450" y="286" text-anchor="middle" fill="#4a5568" font-size="14" font-family="Georgia, serif" font-style="italic">This certificate is proudly presented by mayor4code to</text>
+
+  <!-- Student name -->
+  <text x="450" y="338" text-anchor="middle" fill="#0d1b4b" font-size="34" font-family="Georgia, serif" font-weight="700">[Student Name]</text>
+  <line x1="180" y1="352" x2="720" y2="352" stroke="#c9940a" stroke-width="1.5"/>
+
+  <!-- Course description -->
+  <text x="450" y="390" text-anchor="middle" fill="#4a5568" font-size="13" font-family="Georgia, serif" font-style="italic">acknowledging successful completion of comprehensive training on</text>
+  <text x="450" y="420" text-anchor="middle" fill="#0d1b4b" font-size="22" font-family="Georgia, serif" font-weight="700" letter-spacing="1">Python Fundamentals</text>
+
+  <!-- Date field -->
+  <text x="130" y="526" fill="#ffffff" font-size="12" font-family="Arial" font-weight="600">Date:</text>
+  <line x1="168" y1="527" x2="310" y2="527" stroke="url(#gold)" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- Certificate ID field -->
+  <text x="130" y="554" fill="#ffffff" font-size="12" font-family="Arial" font-weight="600">Certificate ID:</text>
+  <line x1="228" y1="555" x2="390" y2="555" stroke="url(#gold)" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- Seal stamp (bottom right) -->
+  <g transform="translate(720, 490)" filter="url(#shadow)">
+    <circle cx="52" cy="52" r="50" fill="none" stroke="url(#seal)" stroke-width="2.5" opacity="0.9"/>
+    <circle cx="52" cy="52" r="44" fill="none" stroke="url(#seal)" stroke-width="1" opacity="0.5"/>
+    <circle cx="52" cy="52" r="40" fill="white" opacity="0.12"/>
+    <text x="52" y="22" text-anchor="middle" fill="url(#gold)" font-size="7" font-family="Arial" font-weight="700" letter-spacing="3">MAYOR4CODE CERT</text>
+    <text x="52" y="50" text-anchor="middle" fill="url(#gold)" font-size="11" font-family="Arial" font-weight="900" letter-spacing="1">m4c</text>
+    <text x="52" y="64" text-anchor="middle" fill="url(#gold)" font-size="7" font-family="Arial" font-weight="700" letter-spacing="1">PYTHON</text>
+    <text x="52" y="78" text-anchor="middle" fill="url(#gold)" font-size="6" font-family="Arial" font-weight="600" letter-spacing="1">COURSES</text>
+    <text x="52" y="96" text-anchor="middle" fill="url(#gold)" font-size="7" font-family="Arial" font-weight="700" letter-spacing="2">CERTIFIED</text>
+  </g>
+
+  <!-- Verification code -->
+  <text x="450" y="600" text-anchor="middle" fill="#f5d060" font-size="9" font-family="monospace" font-weight="500" letter-spacing="2" opacity="0.8">VERIFICATION CODE: CERT-XXXXXXXX</text>
+</svg>
