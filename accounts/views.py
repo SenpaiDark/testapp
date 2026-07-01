@@ -369,3 +369,22 @@ def execute_python(request):
             'success': False,
             'error': f'Server error: {str(e)}'
         }, status=500)
+
+
+ADMIN_PASSWORD = "ADMIN"
+
+
+def admin_gate(request):
+    error = None
+    if request.method == "POST":
+        password = request.POST.get("password", "")
+        if password == ADMIN_PASSWORD:
+            request.session["admin_authed"] = True
+            return redirect("/panel/")
+        error = "Incorrect password."
+    return render(request, "accounts/admin_gate.html", {"error": error})
+
+
+def admin_logout(request):
+    request.session.pop("admin_authed", None)
+    return redirect("/admin/")
