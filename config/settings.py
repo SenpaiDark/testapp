@@ -142,6 +142,9 @@ JAZZMIN_SETTINGS = {
     "site_brand": "mayor4code",
     "welcome_sign": "Welcome to the mayor4code Admin Panel",
     "copyright": "SenpaiDark 😑",
+    "site_logo": "img/favicon-admin.svg",
+    "site_icon": "img/favicon-admin.svg",
+    "site_logo_classes": "img-circle elevation-3",
 
     # Top nav links
     "topmenu_links": [

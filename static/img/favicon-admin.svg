@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="abg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b"/>
+      <stop offset="100%" style="stop-color:#312e81"/>
+    </linearGradient>
+  </defs>
+  <!-- Dark background -->
+  <rect width="64" height="64" rx="14" fill="url(#abg)"/>
+  <!-- Shield shape -->
+  <path d="M32 10 L48 17 L48 33 Q48 46 32 54 Q16 46 16 33 L16 17 Z"
+        fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Gear icon inside shield -->
+  <circle cx="32" cy="32" r="5" fill="none" stroke="#a5b4fc" stroke-width="2"/>
+  <circle cx="32" cy="32" r="2" fill="#a5b4fc"/>
+  <!-- Gear teeth -->
+  <g stroke="#a5b4fc" stroke-width="2" stroke-linecap="round">
+    <line x1="32" y1="22" x2="32" y2="25"/>
+    <line x1="32" y1="39" x2="32" y2="42"/>
+    <line x1="22" y1="32" x2="25" y2="32"/>
+    <line x1="39" y1="32" x2="42" y2="32"/>
+    <line x1="24.9" y1="24.9" x2="27.1" y2="27.1"/>
+    <line x1="36.9" y1="36.9" x2="39.1" y2="39.1"/>
+    <line x1="39.1" y1="24.9" x2="36.9" y2="27.1"/>
+    <line x1="27.1" y1="36.9" x2="24.9" y2="39.1"/>
+  </g>
+</svg>
