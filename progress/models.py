@@ -24,7 +24,7 @@ class Certificate(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="certificate")
     issued_at = models.DateTimeField(default=now)
     certificate_code = models.CharField(max_length=20, unique=True, blank=True)
-    total_lessons = models.PositiveIntegerField(default=5)
+    total_lessons = models.PositiveIntegerField(default=12)
     avg_score = models.PositiveIntegerField(default=0)
 
     class Meta:

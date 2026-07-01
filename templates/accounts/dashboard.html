@@ -10,7 +10,7 @@
   <div class="all-done-icon">🎉</div>
   <div class="all-done-text">
     <h3>You completed the entire course!</h3>
-    <p>You've passed all 5 lessons with an average score of {{ avg_score|floatformat:0 }}%. Your certificate is ready.</p>
+    <p>You've passed all {{ total_count }} lessons with an average score of {{ avg_score|floatformat:0 }}%. Your certificate is ready.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <a href="{% url 'my_certificate' %}" class="btn btn-primary"><i class="ti ti-certificate"></i> View Certificate</a>
       <a href="{% url 'all_done' %}" class="btn btn-secondary"><i class="ti ti-confetti"></i> Celebrate</a>
