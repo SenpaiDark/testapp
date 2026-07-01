@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=False)
     matric_number = forms.CharField(
         max_length=20,
         required=True,
