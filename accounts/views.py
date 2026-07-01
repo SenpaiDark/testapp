@@ -125,7 +125,7 @@ def dashboard(request):
     )
     progress_pct = round((completed_count / total_count) * 100) if total_count else 0
 
-    all_done = completed_count >= total_count
+    all_done = total_count > 0 and completed_count >= total_count
 
     all_progress = UserLessonProgress.objects.filter(user=request.user)
     agg = all_progress.aggregate(avg=Avg("score"))
@@ -154,7 +154,7 @@ def profile_view(request):
     avg_score = round(agg["avg"]) if agg["avg"] else None
     total_attempts = agg["total_attempts"] or 0
 
-    all_done = completed_count >= total_count and total_count > 0
+    all_done = total_count > 0 and completed_count >= total_count and total_count > 0
 
     return render(request, "accounts/profile.html", {
         "profile_user": request.user,
