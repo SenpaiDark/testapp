@@ -8,7 +8,7 @@ A Django web app for **structured Python learning** — lessons, locked progress
 
 - Register / Login / Logout with show/hide password toggle
 - Dashboard with overall progress bar and per-lesson tracking
-- 5 complete Python lessons (pre-loaded via seed command)
+- 12 complete Python lessons (pre-loaded via seed command)
 - Locked progression — each lesson unlocks only after passing the previous quiz (60% pass mark)
 - Lesson pages with previous / next navigation
 - Multiple-choice quizzes with one-question-per-page UI and instant scoring
@@ -29,6 +29,13 @@ A Django web app for **structured Python learning** — lessons, locked progress
 3. Conditional Statements
 4. Loops
 5. Functions
+6. Lists
+7. Dictionaries
+8. Strings in Depth
+9. Tuples and Sets
+10. List Comprehensions
+11. File I/O
+12. Error Handling
 
 ---
 
@@ -42,7 +49,7 @@ A Django web app for **structured Python learning** — lessons, locked progress
 | Configuration | python-decouple |
 | Frontend | HTML, CSS (custom design system), Vanilla JS |
 | Icons | Tabler Icons (webfont CDN) |
-| Fonts | Poppins, Inter, JetBrains Mono (Google Fonts) |
+| Fonts | Space Grotesk, Inter, JetBrains Mono (Google Fonts) |
 
 ---
 
@@ -143,7 +150,7 @@ mayor4code_final/
 Lessons are locked by default. A lesson unlocks only after the user passes the previous lesson's quiz with at least 60%. Progress is tracked per user per lesson.
 
 ### Certificates
-Automatically issued when a user completes all 5 lessons. Each certificate has a unique code (`CERT-XXXXXXXX`) generated with `secrets`. The code can be shared for verification.
+Automatically issued when a user completes all 12 lessons. Each certificate has a unique code (`CERT-XXXXXXXX`) generated with `secrets`. The code can be shared for verification.
 
 ### Python Playground
 Code is executed in a subprocess with a 5-second timeout and 10,000-character limit. Dangerous imports (`os`, `sys`, `subprocess`, `shutil`) are blocked. Temporary files are cleaned up after execution.

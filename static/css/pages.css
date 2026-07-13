@@ -48,7 +48,7 @@
 }
 
 .hero-grad {
-  background: linear-gradient(135deg, var(--primary), #7c3aed);
+  background: var(--grad-hero);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -625,7 +625,7 @@
 .stat-icon.blue   { background: var(--primary-light); color: var(--primary); }
 .stat-icon.green  { background: var(--success-light); color: var(--success); }
 .stat-icon.amber  { background: var(--warning-light); color: var(--warning); }
-.stat-icon.purple { background: rgba(124,58,237,0.1); color: #7c3aed; }
+.stat-icon.purple { background: var(--accent-light); color: var(--accent); }
 
 .stat-value {
   font-family: var(--font-head);

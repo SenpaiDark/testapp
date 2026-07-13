@@ -371,20 +371,15 @@ def execute_python(request):
         }, status=500)
 
 
-ADMIN_PASSWORD = "ADMIN"
-
-
 def admin_gate(request):
     error = None
     if request.method == "POST":
         password = request.POST.get("password", "")
-        if password == ADMIN_PASSWORD:
-            # Find the superuser and log them into Django automatically
-            from django.contrib.auth.models import User as AuthUser
-            superuser = AuthUser.objects.filter(is_superuser=True).first()
-            if superuser:
-                superuser.backend = "django.contrib.auth.backends.ModelBackend"
-                login(request, superuser)
+        from django.contrib.auth.models import User as AuthUser
+        superuser = AuthUser.objects.filter(is_superuser=True).first()
+        if superuser and superuser.check_password(password):
+            superuser.backend = "django.contrib.auth.backends.ModelBackend"
+            login(request, superuser)
             request.session["admin_authed"] = True
             return redirect("/panel/")
         error = "Incorrect password."

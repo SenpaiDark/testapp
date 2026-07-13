@@ -6,14 +6,16 @@
 {% block content %}
 
 <!-- ═══════════ HERO ═══════════ -->
-<section style="padding: 96px 0 80px;">
+<section class="fx-host" style="padding: 96px 0 80px;">
+  <canvas class="fx-particles" data-particles aria-hidden="true"></canvas>
+  <div class="grid-horizon" aria-hidden="true"></div>
   <div class="hero">
 
     <!-- Left copy -->
     <div>
       <div class="hero-eyebrow">
         <span class="dot"></span>
-        Free · Structured · Certificate Included
+        <span class="term-prompt">learn_python --free --certified</span>
       </div>
 
       <h1>
@@ -46,7 +48,18 @@
         Certificate earned!
       </div>
 
-      <div class="hero-mockup">
+      <div class="cube-scene" aria-hidden="true">
+        <div class="cube">
+          <div class="cube-face">&lt;/&gt;</div>
+          <div class="cube-face">py</div>
+          <div class="cube-face">{ }</div>
+          <div class="cube-face">=&gt;</div>
+          <div class="cube-face">#!</div>
+          <div class="cube-face">( )</div>
+        </div>
+      </div>
+
+      <div class="hero-mockup hud scan" data-tilt data-tilt-max="6">
         <div class="mockup-topbar">
           <span class="mockup-dot red"></span>
           <span class="mockup-dot yellow"></span>
@@ -135,32 +148,32 @@
     <p class="lp-section-sub">A focused, distraction-free platform built to take you from beginner to certified.</p>
 
     <div class="features-grid">
-      <div class="feature-card">
+      <div class="feature-card hud scan" data-reveal>
         <div class="feature-icon"><i class="ti ti-books"></i></div>
         <div class="feature-title">Structured Lessons</div>
         <div class="feature-desc">12 carefully-ordered Python lessons from fundamentals to functions. Each one builds on the last.</div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card hud scan" data-reveal>
         <div class="feature-icon" style="background:var(--success-light);color:var(--success);"><i class="ti ti-lock-check"></i></div>
         <div class="feature-title">Locked Progression</div>
         <div class="feature-desc">Each lesson unlocks only after you pass the previous quiz. No skipping — real mastery only.</div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card hud scan" data-reveal>
         <div class="feature-icon" style="background:var(--warning-light);color:var(--warning);"><i class="ti ti-clipboard-check"></i></div>
         <div class="feature-title">Instant Scoring</div>
         <div class="feature-desc">Quizzes are graded instantly. See exactly which questions you missed and why.</div>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon" style="background:rgba(124,58,237,0.1);color:#7c3aed;"><i class="ti ti-terminal-2"></i></div>
+      <div class="feature-card hud scan" data-reveal>
+        <div class="feature-icon" style="background:var(--accent-light);color:var(--accent);"><i class="ti ti-terminal-2"></i></div>
         <div class="feature-title">Live Playground</div>
         <div class="feature-desc">Write and run real Python code right in the browser. Experiment without setup.</div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card hud scan" data-reveal>
         <div class="feature-icon" style="background:var(--gold-light);color:var(--gold);"><i class="ti ti-certificate"></i></div>
         <div class="feature-title">Completion Certificate</div>
         <div class="feature-desc">Finish all lessons and earn a shareable certificate with a unique verification code.</div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card hud scan" data-reveal>
         <div class="feature-icon" style="background:var(--danger-light);color:var(--danger);"><i class="ti ti-trophy"></i></div>
         <div class="feature-title">Leaderboard</div>
         <div class="feature-desc">Compete with other learners. Track your rank, average score, and completion stats.</div>
@@ -178,17 +191,17 @@
     <h2 class="lp-section-title" style="text-align:center;">Three steps to your certificate</h2>
 
     <div class="how-grid">
-      <div class="how-step">
+      <div class="how-step hud" data-reveal>
         <div class="how-step-num">1</div>
         <h3>Create your account</h3>
         <p>Sign up in seconds — no credit card, no fluff. Just a username and password.</p>
       </div>
-      <div class="how-step">
+      <div class="how-step hud" data-reveal>
         <div class="how-step-num">2</div>
         <h3>Study &amp; take quizzes</h3>
         <p>Read each lesson, then prove your knowledge with a multiple-choice quiz. Pass (≥60%) to unlock the next.</p>
       </div>
-      <div class="how-step">
+      <div class="how-step hud" data-reveal>
         <div class="how-step-num">3</div>
         <h3>Earn your certificate</h3>
         <p>Complete all 12 lessons and receive a personalized certificate with a unique code you can share anywhere.</p>
@@ -206,7 +219,7 @@
       <p class="lp-section-sub" style="margin-bottom:32px;">A locked, linear path that builds real understanding — not shortcuts.</p>
       <a href="{% url 'register' %}" class="btn btn-primary">Start the journey <i class="ti ti-arrow-right"></i></a>
     </div>
-    <div class="lp-roadmap">
+    <div class="lp-roadmap hud" data-reveal>
       <div class="lp-roadmap-item">
         <div class="lp-roadmap-dot done"><i class="ti ti-check"></i></div>
         <div class="lp-roadmap-content">
@@ -302,7 +315,7 @@
     <h2 class="lp-section-title">Write Python. Right here.</h2>
     <p class="lp-section-sub" style="margin:0 auto 32px;">No installs. No setup. Just code.</p>
 
-    <div class="lp-playground-card">
+    <div class="lp-playground-card hud scan" data-reveal data-tilt data-tilt-max="4">
       <div class="lp-playground-header">
         <span class="dot" style="background:#ff5f57;width:10px;height:10px;border-radius:50%;"></span>
         <span class="dot" style="background:#febc2e;width:10px;height:10px;border-radius:50;margin-left:6px;"></span>
@@ -330,18 +343,18 @@
     </div>
     <h2 class="lp-section-title" style="text-align:center;">Learners love it</h2>
     <div class="testimonials-grid" style="margin-top:40px;">
-      <div class="testimonial-card">
+      <div class="testimonial-card scan" data-reveal>
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">"Locked progression was the key for me. I couldn't skip ahead even if I wanted to — and that's exactly what made it stick."</p>
         <div class="testimonial-author">
-          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;">B</div>
+          <div class="avatar avatar-sm" style="background:var(--grad-primary);color:var(--btn-primary-text);">B</div>
           <div class="testimonial-info">
             <h4>Big Flames</h4>
             <p>FYB Course rep</p>
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card scan" data-reveal>
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">"The live playground changed everything. I could test every concept from the lesson immediately. Zero setup friction."</p>
         <div class="testimonial-author">
@@ -352,7 +365,7 @@
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card scan" data-reveal>
         <div class="testimonial-stars">★★★★☆</div>
         <p class="testimonial-text">"I finished in one weekend and got my certificate. Feels genuinely rewarding. Wish there were more lessons!"</p>
         <div class="testimonial-author">
@@ -401,7 +414,7 @@
 <!-- ═══════════ CTA ═══════════ -->
 <section class="lp-section">
   <div class="lp-section-inner">
-    <div class="lp-cta">
+    <div class="lp-cta hud" data-reveal>
       <h2>Start your Python journey today</h2>
       <p>Join learners already working through the curriculum — it's free, structured, and waiting for you.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
@@ -429,7 +442,7 @@
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 #matrix-title .plain { color: inherit; }
 #matrix-title .grad {
-  background: linear-gradient(90deg, var(--primary), #a855f7);
+  background: var(--grad-hero);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
