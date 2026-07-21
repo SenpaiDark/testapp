@@ -440,6 +440,7 @@
   margin-left: 2px;
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+#matrix-title { display: inline-block; }
 #matrix-title .plain { color: inherit; }
 #matrix-title .grad {
   background: var(--grad-hero);
@@ -454,6 +455,7 @@
   var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&';
   var full = 'Master Python the right way';
   var gradStart = 14;
+  var purpleStart = 18;
   var revealed = [];
   var scramble = [];
   var i = 0;
@@ -464,15 +466,14 @@
     var html = '';
     for(var j = 0; j < revealed.length; j++){
       var c = full[j];
-      if(j >= gradStart){
-        html += '<span class="grad">' + (c === ' ' ? '&nbsp;' : c) + '</span>';
-      } else {
-        html += '<span class="plain">' + (c === ' ' ? '&nbsp;' : c) + '</span>';
-      }
+      var cls = 'plain';
+      if(j >= purpleStart) cls = 'text-purple';
+      else if(j >= gradStart) cls = 'grad';
+      html += '<span class="' + cls + '">' + (c === ' ' ? '&nbsp;' : c) + '</span>';
     }
     if(scramble.length){
       var sc = scramble[0];
-      var cls = revealed.length >= gradStart ? 'grad' : 'plain';
+      var cls = revealed.length >= purpleStart ? 'text-purple' : (revealed.length >= gradStart ? 'grad' : 'plain');
       html += '<span class="' + cls + '">' + sc + '</span>';
     }
     el.innerHTML = html;
@@ -497,6 +498,13 @@
       }
     }, 20);
   }
+
+  var m = document.createElement('span');
+  m.style.cssText = 'visibility:hidden;white-space:nowrap;';
+  m.textContent = full;
+  el.appendChild(m);
+  el.style.width = m.offsetWidth + 'px';
+  el.removeChild(m);
 
   setTimeout(revealNext, 150);
 })();

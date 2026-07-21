@@ -89,6 +89,12 @@ html.dark .hud::after { opacity: 0.85; }
   background-clip: text;
   color: transparent;
 }
+.text-purple {
+  background: var(--grad-purple);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 html.dark .text-glow { text-shadow: 0 0 24px rgba(0, 255, 135, 0.35); }
 
 /* ---------------------------------------------------------

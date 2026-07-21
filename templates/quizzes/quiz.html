@@ -64,21 +64,21 @@
   <div class="review-block {% if item.is_correct %}correct{% else %}wrong{% endif %}">
     <div class="review-q">Q{{ forloop.counter }}. {{ item.question.text }}</div>
     {% with q=item.question sel=item.selected cor=item.question.correct_option %}
-    <div class="review-option {% if cor == 'a' %}correct-ans{% elif sel == 'a' and cor != 'a' %}wrong-ans{% endif %}">
-      <i class="ti ti-{% if cor == 'a' %}circle-check{% elif sel == 'a' and cor != 'a' %}circle-x{% else %}circle{% endif %}"></i>
-      <strong>A.</strong> {{ q.option_a }}{% if cor == 'a' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    <div class="review-option {% if cor == 'A' %}correct-ans{% elif sel == 'A' and cor != 'A' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'A' %}circle-check{% elif sel == 'A' and cor != 'A' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>A.</strong> {{ q.option_a }}{% if cor == 'A' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
     </div>
-    <div class="review-option {% if cor == 'b' %}correct-ans{% elif sel == 'b' and cor != 'b' %}wrong-ans{% endif %}">
-      <i class="ti ti-{% if cor == 'b' %}circle-check{% elif sel == 'b' and cor != 'b' %}circle-x{% else %}circle{% endif %}"></i>
-      <strong>B.</strong> {{ q.option_b }}{% if cor == 'b' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    <div class="review-option {% if cor == 'B' %}correct-ans{% elif sel == 'B' and cor != 'B' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'B' %}circle-check{% elif sel == 'B' and cor != 'B' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>B.</strong> {{ q.option_b }}{% if cor == 'B' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
     </div>
-    <div class="review-option {% if cor == 'c' %}correct-ans{% elif sel == 'c' and cor != 'c' %}wrong-ans{% endif %}">
-      <i class="ti ti-{% if cor == 'c' %}circle-check{% elif sel == 'c' and cor != 'c' %}circle-x{% else %}circle{% endif %}"></i>
-      <strong>C.</strong> {{ q.option_c }}{% if cor == 'c' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    <div class="review-option {% if cor == 'C' %}correct-ans{% elif sel == 'C' and cor != 'C' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'C' %}circle-check{% elif sel == 'C' and cor != 'C' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>C.</strong> {{ q.option_c }}{% if cor == 'C' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
     </div>
-    <div class="review-option {% if cor == 'd' %}correct-ans{% elif sel == 'd' and cor != 'd' %}wrong-ans{% endif %}">
-      <i class="ti ti-{% if cor == 'd' %}circle-check{% elif sel == 'd' and cor != 'd' %}circle-x{% else %}circle{% endif %}"></i>
-      <strong>D.</strong> {{ q.option_d }}{% if cor == 'd' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
+    <div class="review-option {% if cor == 'D' %}correct-ans{% elif sel == 'D' and cor != 'D' %}wrong-ans{% endif %}">
+      <i class="ti ti-{% if cor == 'D' %}circle-check{% elif sel == 'D' and cor != 'D' %}circle-x{% else %}circle{% endif %}"></i>
+      <strong>D.</strong> {{ q.option_d }}{% if cor == 'D' %} <span style="font-size:var(--text-xs);">(correct)</span>{% endif %}
     </div>
     {% endwith %}
   </div>
@@ -104,22 +104,22 @@
       <div class="question-text">{{ q.text }}</div>
       <div class="option-list">
         <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
-          <input type="radio" name="question_{{ q.id }}" value="a" />
+          <input type="radio" name="question_{{ q.id }}" value="A" />
           <div class="option-bubble">A</div>
           <span>{{ q.option_a }}</span>
         </label>
         <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
-          <input type="radio" name="question_{{ q.id }}" value="b" />
+          <input type="radio" name="question_{{ q.id }}" value="B" />
           <div class="option-bubble">B</div>
           <span>{{ q.option_b }}</span>
         </label>
         <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
-          <input type="radio" name="question_{{ q.id }}" value="c" />
+          <input type="radio" name="question_{{ q.id }}" value="C" />
           <div class="option-bubble">C</div>
           <span>{{ q.option_c }}</span>
         </label>
         <label class="option-label" onclick="markOpt(this, '{{ q.id }}')">
-          <input type="radio" name="question_{{ q.id }}" value="d" />
+          <input type="radio" name="question_{{ q.id }}" value="D" />
           <div class="option-bubble">D</div>
           <span>{{ q.option_d }}</span>
         </label>

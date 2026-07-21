@@ -269,13 +269,14 @@ def settings_view(request):
     return render(request, "accounts/settings.html")
 
 
+@login_required
 def playground(request):
     """Render the Python playground page where users can write and execute code"""
     return render(request, "accounts/playground.html")
 
 
-@csrf_exempt
-@require_http_methods(["POST"])
+@login_required
+@require_POST
 def execute_python(request):
     """
     Execute Python code safely and return the output.
