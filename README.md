@@ -185,4 +185,9 @@ Key production checklist:
 
 ## License
 
-MIT
+MIT – for educational use
+
+## Contributors
+
+- **Giwa Mayowa Bopoola** — Project Owner (CSC/22/204)
+- **Senpai Dark** (Daniel Atere) — Original Developer
