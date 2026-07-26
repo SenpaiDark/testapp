@@ -194,48 +194,19 @@ function switchTab(name, btn){
   if (panel){ panel.style.display = 'block'; panel.classList.add('active'); }
 }
 
-function applyWarm(el) {
-  el = el || document.documentElement;
-  el.style.setProperty('--primary',       '#704214');
-  el.style.setProperty('--primary-hover', '#5a3410');
-  el.style.setProperty('--primary-light', 'rgba(112,66,20,0.10)');
-  el.style.setProperty('--primary-ring',  'rgba(112,66,20,0.25)');
-  el.style.setProperty('--border',        '#c8a882');
-  el.style.setProperty('--border-2',      '#b08050');
-  el.style.setProperty('--surface',       '#fdf6ee');
-  el.style.setProperty('--surface-2',     '#f5e9d8');
-  el.style.setProperty('--surface-3',     '#ecdcc8');
-  el.style.setProperty('--bg',            '#fdf6ee');
-}
-
-function clearWarm(el) {
-  el = el || document.documentElement;
-  var props = ['--primary','--primary-hover','--primary-light','--primary-ring',
-               '--border','--border-2','--surface','--surface-2','--surface-3','--bg'];
-  props.forEach(function(p){ el.style.removeProperty(p); });
-  el.style.filter = '';
-}
-
 function setTheme(mode){
   document.querySelectorAll('#theme-light,#theme-dark,#theme-warm').forEach(function(c){ c.classList.remove('selected'); });
   var btn = document.getElementById('theme-' + mode);
   if (btn) btn.classList.add('selected');
   var html = document.documentElement;
   html.classList.add('transitioning');
+  html.classList.remove('dark', 'warm');
   if (mode === 'dark') {
     html.classList.add('dark');
-    clearWarm(html);
-    localStorage.setItem('theme','dark');
   } else if (mode === 'warm') {
-    html.classList.remove('dark');
-    html.style.filter = '';
-    applyWarm(html);
-    localStorage.setItem('theme','warm');
-  } else {
-    html.classList.remove('dark');
-    clearWarm(html);
-    localStorage.setItem('theme','light');
+    html.classList.add('warm');
   }
+  localStorage.setItem('theme', mode);
   setTimeout(function(){ html.classList.remove('transitioning'); }, 420);
 }
 
@@ -256,7 +227,7 @@ function setAccent(name, primary, hover, light){
   var t = localStorage.getItem('theme') || 'light';
   var el = document.getElementById('theme-' + t);
   if (el) el.classList.add('selected');
-  if (t === 'warm') applyWarm();
+  if (t === 'warm') document.documentElement.classList.add('warm');
   var a = localStorage.getItem('accent');
   if (a) {
     try {

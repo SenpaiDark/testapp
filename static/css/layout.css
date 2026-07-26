@@ -132,18 +132,28 @@
 .theme-btn:hover { background: var(--surface-3); border-color: var(--border-2); }
 
 .theme-btn .icon-sun,
-.theme-btn .icon-moon {
+.theme-btn .icon-moon,
+.theme-btn .icon-warm {
   position: absolute;
   width: 18px; height: 18px;
   transition: transform 0.4s var(--ease), opacity 0.3s;
 }
 .theme-btn .icon-sun  { color: var(--warning); }
 .theme-btn .icon-moon { color: var(--primary);  }
+.theme-btn .icon-warm { color: var(--gold);     }
 
-html:not(.dark) .icon-moon { transform: rotate(90deg) scale(0); opacity: 0; }
-html:not(.dark) .icon-sun  { transform: none;                   opacity: 1; }
-html.dark       .icon-sun  { transform: rotate(-90deg) scale(0); opacity: 0; }
-html.dark       .icon-moon { transform: none;                    opacity: 1; }
+/* light mode → sun */
+html:not(.dark):not(.warm) .icon-moon,
+html:not(.dark):not(.warm) .icon-warm { transform: rotate(90deg) scale(0); opacity: 0; }
+html:not(.dark):not(.warm) .icon-sun  { transform: none;                   opacity: 1; }
+/* dark mode → moon */
+html.dark .icon-sun,
+html.dark .icon-warm { transform: rotate(-90deg) scale(0); opacity: 0; }
+html.dark .icon-moon { transform: none;                     opacity: 1; }
+/* warm mode → warm */
+html.warm .icon-sun,
+html.warm .icon-moon { transform: rotate(90deg) scale(0); opacity: 0; }
+html.warm .icon-warm { transform: none;                   opacity: 1; }
 
 /* ---------------------------------------------------------
    APP SIDEBAR (authenticated)
@@ -695,6 +705,12 @@ html.dark       .icon-moon { transform: none;                    opacity: 1; }
 @media (max-width: 600px) {
   .pub-footer-grid { grid-template-columns: 1fr; }
   .pub-nav-inner { padding: 0 16px; }
+  .app-topbar { height: auto; padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
+  .app-main { padding: 16px 10px 40px; }
+  .sb-user-name { display: none; }
+  .auth-form-panel { padding: 24px 16px; }
+  .settings-nav { gap: 4px; }
+  .settings-nav a { padding: 8px 12px; font-size: var(--text-xs); }
 }
 
 @keyframes heroShift {

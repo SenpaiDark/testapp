@@ -55,11 +55,11 @@
   --btn-primary-text: #ffffff;
 
   /* Gradients */
-  --grad-primary:  linear-gradient(135deg, #00875A 0%, #006B47 100%);
-  --grad-success:  linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-  --grad-hero:     linear-gradient(135deg, #00875A 0%, #0891b2 60%, #00875A 100%);
+  --grad-primary:  linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  --grad-success:  linear-gradient(135deg, var(--success) 0%, var(--success-hover) 100%);
+  --grad-hero:     linear-gradient(135deg, var(--primary) 0%, var(--accent) 55%, var(--primary) 100%);
   --grad-purple:   linear-gradient(135deg, #a855f7 0%, #d946ef 55%, #a855f7 100%);
-  --grad-gold:     linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  --grad-gold:     linear-gradient(135deg, var(--gold) 0%, #b45309 100%);
 
   /* Shadows */
   --shadow-xs: 0 1px 2px 0 rgba(12,21,18,0.05);
@@ -168,11 +168,11 @@ html.dark {
   --glow-accent:  0 0 18px rgba(34, 211, 238, 0.35);
   --btn-primary-text: #06130c;
 
-  --grad-primary:  linear-gradient(135deg, #00ff87 0%, #00c46a 100%);
-  --grad-success:  linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  --grad-hero:     linear-gradient(135deg, #00ff87 0%, #22d3ee 55%, #00ff87 100%);
+  --grad-primary:  linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  --grad-success:  linear-gradient(135deg, var(--success) 0%, var(--success-hover) 100%);
+  --grad-hero:     linear-gradient(135deg, var(--primary) 0%, var(--accent) 55%, var(--primary) 100%);
   --grad-purple:   linear-gradient(135deg, #c084fc 0%, #e879f9 55%, #c084fc 100%);
-  --grad-gold:     linear-gradient(135deg, #ffc94a 0%, #f59e0b 100%);
+  --grad-gold:     linear-gradient(135deg, var(--gold) 0%, #b45309 100%);
 
   --shadow-xs: 0 1px 2px 0 rgba(0,0,0,0.3);
   --shadow-sm: 0 1px 3px 0 rgba(0,0,0,0.4), 0 1px 2px -1px rgba(0,0,0,0.3);
@@ -183,8 +183,68 @@ html.dark {
 
   --overlay:   rgba(0, 0, 0, 0.65);
 
-  --code-bg:   #060a0f;
+  --code-bg:   #1a1f2e;
   --code-text: #d7e6dd;
+  --code-border:#2a3142;
+}
+
+/* ---------------------------------------------------------
+   WARM MODE TOKENS  (earthy paper terminal)
+   --------------------------------------------------------- */
+html.warm {
+  --primary:        #704214;
+  --primary-hover:  #5a3410;
+  --primary-light:  rgba(112,66,20,0.10);
+  --primary-ring:   rgba(112,66,20,0.25);
+
+  --accent:         #b8845a;
+  --accent-light:   rgba(184,132,90,0.10);
+
+  --success:        #4a7c3f;
+  --success-hover:  #3d6b34;
+  --success-light:  rgba(74,124,63,0.10);
+
+  --warning:        #b8860b;
+  --warning-light:  rgba(184,134,11,0.10);
+
+  --danger:         #b03a2e;
+  --danger-hover:   #942e24;
+  --danger-light:   rgba(176,58,46,0.10);
+
+  --gold:           #b8860b;
+  --gold-light:     rgba(184,134,11,0.12);
+
+  --bg:          #fdf6ee;
+  --bg-2:        #f5e9d8;
+  --surface:     #fffbf5;
+  --surface-2:   #fdf6ee;
+  --surface-3:   #ecdcc8;
+  --border:      #c8a882;
+  --border-2:    #b08050;
+
+  --text:        #2c1810;
+  --text-2:      #4a3228;
+  --muted:       #8a7568;
+  --muted-2:     #b8a090;
+  --muted-3:     #d4c8bc;
+
+  --grid-line:   rgba(112,66,20,0.06);
+  --glow-primary: 0 0 8px rgba(112,66,20,0.20);
+  --glow-accent:  0 0 8px rgba(184,132,90,0.20);
+  --btn-primary-text: #fffbf5;
+
+  --shadow-xs: 0 1px 2px 0 rgba(44,24,16,0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(44,24,16,0.08), 0 1px 2px -1px rgba(44,24,16,0.05);
+  --shadow:    0 4px 6px -1px rgba(44,24,16,0.07), 0 2px 4px -2px rgba(44,24,16,0.05);
+  --shadow-md: 0 10px 15px -3px rgba(44,24,16,0.08), 0 4px 6px -4px rgba(44,24,16,0.04);
+  --shadow-lg: 0 20px 25px -5px rgba(44,24,16,0.08), 0 8px 10px -6px rgba(44,24,16,0.03);
+  --shadow-xl: 0 25px 50px -12px rgba(44,24,16,0.18);
+
+  --overlay:   rgba(44, 24, 16, 0.45);
+
+  --code-bg:   #0f0d0a;
+  --code-text: #e8ddd0;
+  --code-border:#c8a882;
 }
 
 /* ---------------------------------------------------------

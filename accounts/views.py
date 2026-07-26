@@ -18,6 +18,8 @@ import sys
 import subprocess
 import tempfile
 import os
+import urllib.request
+import urllib.parse
 
 
 def home(request):
@@ -57,7 +59,7 @@ def register_view(request):
         user = form.save()
         login(request, user)
         return redirect("dashboard")
-    return render(request, "accounts/register.html", {"form": form})
+    return render(request, "accounts/register.html", {"form": form, "google_client_id": django_settings.GOOGLE_CLIENT_ID})
 
 
 def verify_email(request, uidb64, token):
@@ -90,7 +92,7 @@ def login_view(request):
             return redirect("dashboard")
         else:
             error = "Invalid username or password."
-    return render(request, "accounts/login.html", {"error": error})
+    return render(request, "accounts/login.html", {"error": error, "google_client_id": django_settings.GOOGLE_CLIENT_ID})
 
 
 @require_POST
@@ -205,6 +207,7 @@ def all_done_view(request):
     lessons = list(Lesson.objects.filter(is_published=True).order_by("order"))
     all_progress = UserLessonProgress.objects.filter(user=request.user)
     total_lessons = len(lessons)
+    completed_count = sum(1 for p in all_progress if p.is_completed)
 
     agg = all_progress.aggregate(avg=Avg("score"), total_attempts=Sum("attempts"))
     avg_score = round(agg["avg"]) if agg["avg"] else None
@@ -212,6 +215,7 @@ def all_done_view(request):
 
     return render(request, "accounts/all_done.html", {
         "total_lessons": total_lessons,
+        "completed_count": completed_count,
         "avg_score": avg_score,
         "total_attempts": total_attempts,
     })
@@ -370,6 +374,73 @@ def execute_python(request):
             'success': False,
             'error': f'Server error: {str(e)}'
         }, status=500)
+
+
+def google_login(request):
+    params = urllib.parse.urlencode({
+        "client_id": django_settings.GOOGLE_CLIENT_ID,
+        "redirect_uri": django_settings.GOOGLE_REDIRECT_URI,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "access_type": "offline",
+        "prompt": "select_account",
+    })
+    return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
+
+
+def google_callback(request):
+    code = request.GET.get("code")
+    error = request.GET.get("error")
+    if error or not code:
+        return render(request, "accounts/login.html", {"error": "Google sign-in was cancelled or failed."})
+
+    import json as _json
+    try:
+        data = urllib.parse.urlencode({
+            "code": code,
+            "client_id": django_settings.GOOGLE_CLIENT_ID,
+            "client_secret": django_settings.GOOGLE_CLIENT_SECRET,
+            "redirect_uri": django_settings.GOOGLE_REDIRECT_URI,
+            "grant_type": "authorization_code",
+        }).encode()
+        req = urllib.request.Request(
+            "https://oauth2.googleapis.com/token",
+            data=data,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            token_data = _json.loads(resp.read())
+
+        id_token = token_data.get("id_token")
+        if not id_token:
+            return render(request, "accounts/login.html", {"error": "Failed to get ID token from Google."})
+
+        req2 = urllib.request.Request(f"https://oauth2.googleapis.com/tokeninfo?id_token={id_token}")
+        with urllib.request.urlopen(req2, timeout=10) as resp2:
+            info = _json.loads(resp2.read())
+
+        g_email = info.get("email")
+        g_name = info.get("name", g_email.split("@")[0])
+        g_sub = info.get("sub")
+
+        if not g_email:
+            return render(request, "accounts/login.html", {"error": "No email returned from Google."})
+
+        import secrets
+        from django.contrib.auth.models import User as AuthUser
+        user = AuthUser.objects.filter(email=g_email).first()
+        if not user:
+            user = AuthUser.objects.create_user(
+                username=g_email.split("@")[0] + "_" + g_sub[:6],
+                email=g_email,
+                password=secrets.token_urlsafe(32),
+                first_name=g_name,
+            )
+        user.backend = "django.contrib.auth.backends.ModelBackend"
+        login(request, user)
+        return redirect("dashboard")
+    except Exception as e:
+        return render(request, "accounts/login.html", {"error": f"Google sign-in error: {str(e)}"})
 
 
 def admin_gate(request):

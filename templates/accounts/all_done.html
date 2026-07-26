@@ -26,11 +26,11 @@
   <div class="card" style="padding:28px;margin-bottom:32px;">
     <div class="result-stats">
       <div>
-        <div class="result-stat-val" style="color:var(--success);">5/5</div>
+        <div class="result-stat-val" style="color:var(--success);">{{ completed_count }}/{{ total_lessons }}</div>
         <div class="result-stat-lbl">Lessons</div>
       </div>
       <div>
-        <div class="result-stat-val" style="color:var(--primary);">100%</div>
+        <div class="result-stat-val" style="color:var(--primary);">{{ avg_score|default:"100" }}%</div>
         <div class="result-stat-lbl">Complete</div>
       </div>
       <div>

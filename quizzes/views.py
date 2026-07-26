@@ -50,6 +50,15 @@ def take_quiz(request, lesson_slug):
             progress.completed_at = timezone.now()
         progress.save()
 
+        raw = request.POST.get("elapsed", "0")
+        try:
+            elapsed_sec = int(raw)
+        except ValueError:
+            elapsed_sec = 0
+        mins = elapsed_sec // 60
+        secs = elapsed_sec % 60
+        time_taken = f"{mins}:{secs:02d}" if mins else f"{secs}s"
+
         results = {
             "score_count": score_count,
             "total": total,
@@ -57,6 +66,7 @@ def take_quiz(request, lesson_slug):
             "completed": completed,
             "questions": question_results,
             "pass_mark": quiz.pass_mark,
+            "time_taken": time_taken,
         }
 
     return render(request, "quizzes/quiz.html", {

@@ -11,22 +11,9 @@
   <script>
     (function(){
       var html = document.documentElement;
-      var t = localStorage.getItem('theme');
-      if (t !== 'light' && t !== 'warm') {
-        html.classList.add('dark');
-      }
-      if (t === 'warm') {
-        html.style.setProperty('--primary',       '#704214');
-        html.style.setProperty('--primary-hover', '#5a3410');
-        html.style.setProperty('--primary-light', 'rgba(112,66,20,0.10)');
-        html.style.setProperty('--primary-ring',  'rgba(112,66,20,0.25)');
-        html.style.setProperty('--border',        '#c8a882');
-        html.style.setProperty('--border-2',      '#b08050');
-        html.style.setProperty('--surface',       '#fdf6ee');
-        html.style.setProperty('--surface-2',     '#f5e9d8');
-        html.style.setProperty('--surface-3',     '#ecdcc8');
-        html.style.setProperty('--bg',            '#fdf6ee');
-      }
+      var t = localStorage.getItem('theme') || 'light';
+      if (t === 'dark') html.classList.add('dark');
+      if (t === 'warm') html.classList.add('warm');
       var a = localStorage.getItem('accent');
       if (a) {
         try {
@@ -155,7 +142,7 @@
     <span class="app-page-title">{% block page_title %}Dashboard{% endblock %}</span>
 
     <div class="app-topbar-right">
-      <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle dark mode">
+      <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
           <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
@@ -164,6 +151,10 @@
         </svg>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-warm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          <path d="M8 12a4 4 0 0 0 8 0"/>
         </svg>
       </button>
     </div>
@@ -192,11 +183,30 @@
 (function(){
   var btn = document.getElementById('theme-toggle');
   if (!btn) return;
+  function setMode(mode){
+    var html = document.documentElement;
+    html.classList.remove('dark', 'warm');
+    if (mode === 'dark') html.classList.add('dark');
+    if (mode === 'warm') html.classList.add('warm');
+    localStorage.setItem('theme', mode);
+  }
+  var modes = ['light', 'dark', 'warm'];
+  var dir = localStorage.getItem('theme-dir');
+  if (dir !== 'fwd' && dir !== 'rev') dir = 'fwd';
   btn.addEventListener('click', function(){
     var html = document.documentElement;
     html.classList.add('transitioning');
-    html.classList.toggle('dark');
-    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    var cur = localStorage.getItem('theme') || 'light';
+    var idx = modes.indexOf(cur);
+    if (dir === 'fwd') {
+      idx++;
+      if (idx >= modes.length) { idx = modes.length - 2; dir = 'rev'; }
+    } else {
+      idx--;
+      if (idx < 0) { idx = 1; dir = 'fwd'; }
+    }
+    localStorage.setItem('theme-dir', dir);
+    setMode(modes[idx]);
     setTimeout(function(){ html.classList.remove('transitioning'); }, 420);
   });
 })();

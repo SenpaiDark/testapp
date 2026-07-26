@@ -40,6 +40,10 @@
         <div class="result-stat-val">{{ results.percent }}%</div>
         <div class="result-stat-lbl">Score</div>
       </div>
+      <div>
+        <div class="result-stat-val">{{ results.time_taken }}</div>
+        <div class="result-stat-lbl">Time</div>
+      </div>
     </div>
 
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
@@ -91,6 +95,9 @@
       <span>Question <span id="q-current">1</span> of {{ questions|length }}</span>
       <span><span id="q-answered">0</span> answered</span>
     </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="quiz-timer" id="quiz-timer">⏱ 00:00</span>
+    </div>
     <div class="progress-track">
       <div class="progress-fill" id="quiz-bar" style="width:0%;transition:width 0.4s var(--ease);"></div>
     </div>
@@ -98,6 +105,7 @@
 
   <form method="post" id="quiz-form">
     {% csrf_token %}
+    <input type="hidden" name="elapsed" id="elapsed-input" value="0" />
 
     {% for q in questions %}
     <div class="question-card {% if forloop.first %}active{% endif %}" id="q-{{ forloop.counter }}" data-index="{{ forloop.counter }}">
@@ -156,6 +164,14 @@
 <script>
 var total = {{ questions|length }};
 var answered = {};
+var timerSec = 0;
+var timerEl = document.getElementById('quiz-timer');
+var timerInt = setInterval(function(){
+  timerSec++;
+  var m = String(Math.floor(timerSec / 60)).padStart(2, '0');
+  var s = String(timerSec % 60).padStart(2, '0');
+  timerEl.textContent = '\u23F1 ' + m + ':' + s;
+}, 1000);
 
 function gotoQ(n){
   document.querySelectorAll('.question-card').forEach(function(c){ c.classList.remove('active'); });
@@ -177,9 +193,17 @@ function markOpt(label, qid){
 }
 
 document.getElementById('quiz-form').addEventListener('submit', function(e){
+  clearInterval(timerInt);
+  document.getElementById('elapsed-input').value = timerSec;
   if (Object.keys(answered).length < total){
     if (!confirm('You have ' + (total - Object.keys(answered).length) + ' unanswered question(s). Submit anyway?')){
       e.preventDefault();
+      timerInt = setInterval(function(){
+        timerSec++;
+        var m = String(Math.floor(timerSec / 60)).padStart(2, '0');
+        var s = String(timerSec % 60).padStart(2, '0');
+        timerEl.textContent = '\u23F1 ' + m + ':' + s;
+      }, 1000);
     }
   }
 });

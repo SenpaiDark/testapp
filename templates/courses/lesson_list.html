@@ -20,11 +20,26 @@
   </div>
 </div>
 
+<!-- Search & filter -->
+<div class="ll-toolbar">
+  <div class="ll-search">
+    <i class="ti ti-search"></i>
+    <input type="text" id="ll-search" placeholder="Search lessons..." autocomplete="off" />
+  </div>
+  <div class="ll-filters" id="ll-filters">
+    <button class="ll-filter active" data-filter="all">All</button>
+    <button class="ll-filter" data-filter="done">Completed</button>
+    <button class="ll-filter" data-filter="unlocked">Open</button>
+    <button class="ll-filter" data-filter="locked">Locked</button>
+  </div>
+</div>
+
 <!-- Lesson list -->
-<div class="lesson-list-cards">
+<div class="lesson-list-cards" id="lesson-list">
   {% for row in lesson_rows %}
   <{% if row.unlocked %}a href="{% url 'lesson_detail' row.lesson.slug %}"{% else %}div{% endif %}
-     class="ll-card {% if not row.unlocked %}ll-locked{% endif %}">
+     class="ll-card {% if row.progress.is_completed %}ll-done{% elif row.unlocked %}ll-unlocked{% else %}ll-locked{% endif %}"
+     data-status="{% if row.progress.is_completed %}done{% elif row.unlocked %}unlocked{% else %}locked{% endif %}">
 
     <div class="ll-num {% if row.progress.is_completed %}done{% elif row.unlocked %}default{% else %}locked{% endif %}">
       {% if row.progress.is_completed %}
@@ -68,5 +83,38 @@
   {% endfor %}
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var search = document.getElementById('ll-search');
+  var filters = document.getElementById('ll-filters');
+  var cards = document.querySelectorAll('#lesson-list > .ll-card');
+  if (!search || !cards.length) return;
+
+  function apply() {
+    var q = search.value.toLowerCase().trim();
+    var active = filters.querySelector('.ll-filter.active');
+    var status = active ? active.dataset.filter : 'all';
+    cards.forEach(function(c) {
+      var title = c.querySelector('h3').textContent.toLowerCase();
+      var matchesSearch = !q || title.indexOf(q) !== -1;
+      var matchesFilter = status === 'all' || c.dataset.status === status;
+      c.style.display = matchesSearch && matchesFilter ? '' : 'none';
+    });
+  }
+
+  search.addEventListener('input', apply);
+
+  filters.addEventListener('click', function(e) {
+    var btn = e.target.closest('.ll-filter');
+    if (!btn) return;
+    filters.querySelectorAll('.ll-filter').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    apply();
+  });
+})();
+</script>
 {% endblock %}
 

@@ -791,6 +791,52 @@
 /* ---------------------------------------------------------
    LESSON LIST
    --------------------------------------------------------- */
+/* Lesson toolbar — search + filter */
+.ll-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.ll-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 12px;
+  transition: border-color var(--dur-fast);
+}
+.ll-search:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+.ll-search i { color: var(--muted-2); font-size: 1.1rem; }
+.ll-search input {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 10px 0;
+  font-size: var(--text-sm);
+  color: var(--text);
+  outline: none;
+}
+.ll-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.ll-filter {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+.ll-filter:hover { border-color: var(--primary); color: var(--primary); }
+.ll-filter.active { background: var(--primary); color: var(--btn-primary-text); border-color: var(--primary); }
+
 .lesson-list-hero {
   display: flex;
   align-items: center;
@@ -919,6 +965,17 @@
 }
 .lesson-body pre code { background: none; color: inherit; padding: 0; border-radius: 0; font-size: inherit; }
 
+/* dark-mode inline code — ash bg instead of bright primary tint */
+html.dark .lesson-body code,
+html.warm .lesson-body code {
+  background: #1e2933;
+  color: #e2e8f0;
+}
+html.warm .lesson-body code {
+  background: #e8ddd0;
+  color: #4a3228;
+}
+
 /* Info boxes */
 .info-box {
   border-radius: var(--radius);
@@ -948,6 +1005,12 @@
   font-size: var(--text-sm);
   color: var(--muted);
   margin-bottom: 8px;
+}
+.quiz-timer {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 .question-card {
@@ -1604,6 +1667,32 @@
   .features-grid { grid-template-columns: 1fr; }
   .lesson-content-card { padding: 20px; }
   .ll-right { display: none; }
+  .welcome-banner { flex-direction: column; text-align: center; padding: 24px 20px; }
+  .welcome-banner-text > h2 { font-size: 1.2rem; }
+  .lesson-list-hero { flex-direction: column; text-align: center; padding: 20px; }
+  .quiz-wrap { padding: 0; }
+  .option-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr; }
+  .stat-card { padding: 16px; }
+  .profile-stats { grid-template-columns: 1fr; }
+  .lesson-cards { grid-template-columns: 1fr; }
+  .app-main { padding: 16px 12px 40px; }
+  .question-card { padding: 20px 16px; }
+  .ll-card { padding: 16px; gap: 14px; }
+  .ll-num { width: 36px; height: 36px; font-size: 0.85rem; }
+  .ll-info h3 { font-size: var(--text-sm); }
+  .result-stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .result-score { width: 90px; height: 90px; font-size: 1.8rem; }
+  .quiz-result-card { padding: 24px 16px; }
+  .ll-toolbar { flex-direction: column; align-items: stretch; }
+  .ll-filters { justify-content: center; }
+  .review-block { padding: 14px; }
+  .review-option { font-size: var(--text-xs); padding: 8px 10px; }
+  .progress-row { flex-direction: column; gap: 6px; align-items: flex-start; }
+  .dash-grid > div > div:last-child { margin-top: 0; }
 }
 
 @media print {
