@@ -38,3 +38,9 @@ services:
         sync: false
       - key: ADMIN_EMAIL
         value: admin@mayor4code.com
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        value: https://mayor4code.onrender.com/google/callback/
