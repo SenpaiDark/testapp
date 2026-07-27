@@ -34,6 +34,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
+  <!-- PWA -->
+  <link rel="manifest" href="{% static 'manifest.json' %}" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="mayor4code" />
+
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 
@@ -224,6 +231,11 @@ document.querySelectorAll('.faq-btn').forEach(function(btn){
 </script>
 
 <script src="{% static 'js/fx.js' %}" defer></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register("{% static 'sw.js' %}", { scope: '/' });
+}
+</script>
 {% block extra_js %}{% endblock %}
 
 </body>

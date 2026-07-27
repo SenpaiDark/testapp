@@ -222,7 +222,7 @@ html.dark .grid-horizon { display: block; }
 }
 
 /* Hero sections that host FX need stacking context */
-.fx-host { position: relative; overflow: hidden; }
+.fx-host { position: relative; overflow: clip; }
 .fx-host > *:not(.fx-particles):not(.grid-horizon) { position: relative; z-index: 1; }
 
 /* ---------------------------------------------------------

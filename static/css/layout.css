@@ -25,9 +25,10 @@
   align-items: center;
   height: 100%;
   padding: 0 24px;
-  gap: 32px;
+  gap: 16px;
   max-width: 1280px;
   margin: 0 auto;
+  flex-wrap: wrap;
 }
 
 .pub-logo {
@@ -168,7 +169,6 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
   flex-direction: column;
   z-index: 300;
   overflow-y: auto;
-  overflow-x: hidden;
   transition: transform var(--dur-slow) var(--ease);
 }
 
@@ -232,6 +232,8 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
   font-weight: var(--fw-medium);
   text-decoration: none;
   transition: color var(--dur-fast), background var(--dur-fast);
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -323,7 +325,7 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
    --------------------------------------------------------- */
 .app-shell {
   margin-left: var(--sidebar-w);
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -333,13 +335,14 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
   position: sticky;
   top: 0;
   z-index: 200;
-  height: var(--topbar-h);
+  min-height: var(--topbar-h);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 0 28px;
-  gap: 16px;
+  padding: 8px 28px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 @supports (backdrop-filter: blur(8px)) {
@@ -401,7 +404,7 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
    --------------------------------------------------------- */
 .pub-content {
   padding-top: var(--topbar-h);
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -465,7 +468,7 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: 40px 24px;
   animation: fadeUp 0.4s var(--ease);
 }
@@ -477,7 +480,6 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
   max-width: 880px;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xl);
-  overflow: hidden;
   background: var(--surface);
 }
 
@@ -491,7 +493,6 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
   background-size: 200% 200%;
   animation: heroShift 12s ease infinite;
   color: #fff;
-  overflow: hidden;
 }
 
 .auth-brand::before {
@@ -672,6 +673,10 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
 /* ---------------------------------------------------------
    RESPONSIVE
    --------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .pub-footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+
 @media (max-width: 900px) {
   /* Sidebar hides, overlays on open */
   .app-sidebar {
@@ -687,25 +692,25 @@ html.warm .icon-warm { transform: none;                   opacity: 1; }
   .app-shell { margin-left: 0; }
   .app-hamburger { display: flex; }
   .app-main { padding: 24px 16px 48px; }
-  .app-topbar { padding: 0 16px; }
+  .app-topbar { padding: 8px 16px; }
 
   /* Auth card - single column */
   .auth-card-split { grid-template-columns: 1fr; }
   .auth-brand { display: none; }
   .auth-form-panel { padding: 32px 24px; }
 
-  /* Footer */
-  .pub-footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-
   /* Pub nav */
   .pub-links { display: none; }
   .nav-hamburger { display: flex; }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .pub-footer-grid { grid-template-columns: 1fr; }
-  .pub-nav-inner { padding: 0 16px; }
-  .app-topbar { height: auto; padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
+}
+
+@media (max-width: 600px) {
+  .pub-nav-inner { padding: 0 16px; gap: 8px; }
+  .app-topbar { padding: 6px 12px; gap: 6px; }
   .app-main { padding: 16px 10px 40px; }
   .sb-user-name { display: none; }
   .auth-form-panel { padding: 24px 16px; }
